@@ -1,4 +1,4 @@
-defmodule Schwi.CommandHandler do
+defmodule Schwi.EventHandler do
   use Nostrum.Consumer
 
   alias Nostrum.Api

@@ -11,7 +11,7 @@ defmodule Schwi.Application do
       # Starts a worker by calling: Schwi.Worker.start_link(arg)
       {Redix, name: :redix},
       {Schwi.Worker, name: :worker},
-      {Schwi.CommandHandler, name: :command_handler}
+      {Schwi.EventHandler, name: :event_handler}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
