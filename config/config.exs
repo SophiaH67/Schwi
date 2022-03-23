@@ -8,3 +8,7 @@ config :nostrum,
     :message_content,
     :direct_messages
   ]
+
+config :logger,
+  # The log level of the logger as a string(env)
+  level: :info
