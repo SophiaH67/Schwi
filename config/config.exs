@@ -6,7 +6,8 @@ config :nostrum,
   gateway_intents: [
     :guilds,
     :message_content,
-    :direct_messages
+    :direct_messages,
+    :guild_messages
   ]
 
 config :logger,

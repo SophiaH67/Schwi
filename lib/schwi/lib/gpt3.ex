@@ -10,18 +10,25 @@ defmodule Schwi.Lib.GPT3 do
     ]
 
     {:ok, body} = JSON.encode(prompt: prompt, max_tokens: 64)
+    res = HTTPoison.post(url, body, headers)
 
-    {:ok, %HTTPoison.Response{status_code: 200, body: response_raw}} =
-      HTTPoison.post(url, body, headers)
+    case res do
+      {:ok, %HTTPoison.Response{status_code: 200, body: response_raw}} ->
+        {:ok, response} = JSON.decode(response_raw)
 
-    {:ok, response} = JSON.decode(response_raw)
-    # Get choices[0].text if choices is not empty
-    choices = response["choices"]
+        choices = response["choices"]
 
-    if Enum.count(choices) > 0 do
-      String.trim(List.first(choices)["text"])
-    else
-      nil
+        if Enum.count(choices) > 0 do
+          {:ok, String.trim(List.first(choices)["text"])}
+        else
+          {:error, "No completion found"}
+        end
+
+      {:ok, %HTTPoison.Response{status_code: response_code}} ->
+        {:error, "HTTP #{response_code}"}
+
+      _ ->
+        {:error, "Unknown error"}
     end
   end
 end
