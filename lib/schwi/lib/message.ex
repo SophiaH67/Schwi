@@ -27,4 +27,15 @@ defmodule Schwi.Lib.Message do
 
     Schwi.Lib.Message.reply(msg, response)
   end
+
+  def info(msg, text) do
+    response =
+      Enum.random([
+        "Info: #{text}",
+        "Information: #{text}",
+        "Notice: #{text}"
+      ])
+
+    Schwi.Lib.Message.reply(msg, response)
+  end
 end
