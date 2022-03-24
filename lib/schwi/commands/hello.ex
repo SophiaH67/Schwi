@@ -1,9 +1,13 @@
 defmodule Schwi.Commands.Hello do
-  alias Nostrum.Api
-
   def run(msg, _args) do
-    if Logger.level() == :info do
-      Api.create_message(msg.channel_id, "Hello, #{msg.author.username}!")
-    end
+    Schwi.Lib.Message.info(
+      msg,
+      Enum.random([
+        "Hello",
+        "Hi",
+        "Konbanwa",
+        "Hey Hey!"
+      ])
+    )
   end
 end
