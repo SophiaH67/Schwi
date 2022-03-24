@@ -8,6 +8,10 @@ defmodule Schwi.Lib.Message do
     )
   end
 
+  def send(channel_id, text) do
+    Api.create_message(channel_id, content: text)
+  end
+
   def success(msg, text) do
     response =
       Enum.random([

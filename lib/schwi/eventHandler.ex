@@ -7,7 +7,12 @@ defmodule Schwi.EventHandler do
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
     IO.puts("#{msg.author.username}: #{msg.content}")
-    Schwi.CommandHandler.handle(msg)
+
+    if Schwi.Lib.IBC.is_ibc_reply(msg) do
+      Schwi.Lib.IBC.handle_reply(msg)
+    else
+      Schwi.CommandHandler.handle(msg)
+    end
   end
 
   # Default event handler, if you don't include this, your consumer WILL crash if
