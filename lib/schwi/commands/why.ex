@@ -1,4 +1,4 @@
-defmodule Schwi.Commands.What do
+defmodule Schwi.Commands.Why do
   def run(msg, _args) do
     {result, response} = Schwi.Lib.GPT3.get_completion(msg.content)
 
