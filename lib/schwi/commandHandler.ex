@@ -2,7 +2,7 @@ defmodule Schwi.CommandHandler do
   def handle(msg) do
     message = msg.content
 
-    args = String.split(message, " ")
+    args = Schwi.CommandHandler.parse_args(message)
     {cmd, args} = List.pop_at(args, 0)
 
     try do
@@ -14,5 +14,9 @@ defmodule Schwi.CommandHandler do
     rescue
       _e in ArgumentError -> :noop
     end
+  end
+
+  def parse_args(message) do
+    OptionParser.split(message)
   end
 end
