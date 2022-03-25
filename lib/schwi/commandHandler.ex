@@ -6,6 +6,7 @@ defmodule Schwi.CommandHandler do
     {cmd, args} = List.pop_at(args, 0)
 
     try do
+      cmd = cmd || ""
       cased_cmd = Recase.to_pascal(String.downcase(cmd))
       module = String.to_existing_atom("Elixir.Schwi.Commands.#{cased_cmd}")
 
