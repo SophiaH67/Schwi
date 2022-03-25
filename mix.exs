@@ -27,7 +27,8 @@ defmodule Schwi.MixProject do
       {:redix, "~> 1.1"},
       {:nostrum, github: "Kraigie/nostrum"},
       {:httpoison, "~> 1.6"},
-      {:json, "~> 1.4"}
+      {:json, "~> 1.4"},
+      {:recase, "~> 0.5"}
     ]
   end
 end
