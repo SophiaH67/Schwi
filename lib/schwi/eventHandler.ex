@@ -6,7 +6,11 @@ defmodule Schwi.EventHandler do
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
-    IO.puts("#{msg.author.username}: #{msg.content}")
+    unless msg.author.username == "Schwi" do
+      spawn(fn ->
+        Schwi.Lib.Keyword.notify_keywords(msg)
+      end)
+    end
 
     if Schwi.Lib.IBC.is_ibc_reply(msg) do
       Schwi.Lib.IBC.handle_reply(msg)
