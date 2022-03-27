@@ -3,7 +3,7 @@ from Classes.MessageContext import MessageContext
 
 
 class Command(BaseCommand):
-  aliases = ["thanks"]
+  aliases = ["thanks", "thank", "thx"]
 
   async def run(self, ctx: MessageContext):
     print("ThanksCommand")
