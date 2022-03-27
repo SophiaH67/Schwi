@@ -1,7 +1,7 @@
 import discord
 import os
 import importlib
-import shlex
+import redis
 
 from Classes.MessageContext import MessageContext
 
@@ -11,6 +11,7 @@ class Schwi(discord.Client):
 
   def __init__(self):
     super().__init__()
+    self.redis = redis.Redis(host="localhost", port=6379, db=0)
     self.load_commands()
 
   def load_commands(self):
