@@ -1,11 +1,9 @@
+from Classes.BaseCommand import BaseCommand
 from Classes.MessageContext import MessageContext
 
 
-class Command:
+class Command(BaseCommand):
   aliases = ["hello"]
-
-  def __init__(self, schwi):
-    self.schwi = schwi
 
   async def run(self, ctx: MessageContext):
     await ctx.info(

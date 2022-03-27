@@ -1,3 +1,4 @@
+from Classes.BaseCommand import BaseCommand
 from Classes.MessageContext import MessageContext
 import openai
 import os
@@ -5,11 +6,8 @@ import os
 openai.api_key = os.getenv("OPENAI_KEY")
 
 
-class Command:
+class Command(BaseCommand):
   aliases = ["compute", "what", "who", "why", "when", "where", "how"]
-
-  def __init__(self, schwi):
-    self.schwi = schwi
 
   async def run(self, ctx: MessageContext):
     prompt = ctx.message.content
