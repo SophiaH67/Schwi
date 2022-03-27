@@ -13,6 +13,8 @@ class MessageContext:
     self.message = message
 
     self.args = shlex.split(str.replace(message.content, "'", "\\'"))
+    if len(self.args) == 0:
+      return
     self.command = self.args.pop(0)
     self.lcommand = str.lower(self.command)
 
