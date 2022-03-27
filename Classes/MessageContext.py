@@ -13,14 +13,15 @@ class MessageContext:
     self.message = message
 
     self.args = shlex.split(str.replace(message.content, "'", "\\'"))
-    self.command = self.args.pop()
+    self.command = self.args.pop(0)
+    self.lcommand = str.lower(self.command)
 
     # Set methods
     self._reply = self.message.reply
 
   async def run(self):
-    if str.lower(self.command) in self.schwi.commands:
-      await self.schwi.commands[self.command].run(self)
+    if str.lower(self.lcommand) in self.schwi.commands:
+      await self.schwi.commands[self.lcommand].run(self)
 
   def _get_text(self, message: str | list[str]):
     if isinstance(message, str):
