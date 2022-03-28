@@ -1,6 +1,9 @@
-from Classes.Schwi import Schwi
-import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import config
+from Classes.Schwi import Schwi
 
 schwi = Schwi()
 
