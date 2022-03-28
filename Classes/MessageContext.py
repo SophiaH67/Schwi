@@ -3,6 +3,8 @@ from discord import Message
 import shlex
 import typing
 
+from Classes.PermissionsManager import PermissionLevel
+
 if typing.TYPE_CHECKING:
   from Classes.Schwi import Schwi
 
@@ -28,9 +30,12 @@ class MessageContext:
 
   async def run(self):
     if self.permission_level is None:
-      self.permission_level = await self.schwi.permissions_manager.get_permissions(
+      self.permission_level = self.schwi.permissions_manager.get_permissions(
         self.message.author.id
       )
+    print(f"{self.message.author} ({self.permission_level}) ran {self.command}")
+    if self.permission_level == PermissionLevel.BLOCKED:
+      return
     if str.lower(self.lcommand) in self.schwi.commands:
       try:
         result = await self.schwi.commands[self.lcommand].run(self)
