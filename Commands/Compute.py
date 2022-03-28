@@ -17,5 +17,4 @@ class Command(BaseCommand):
       engine="text-davinci-002", prompt=prompt, max_tokens=64
     )
     text: str = completion.choices[0].text
-    text = text.strip()
-    await ctx.success(text)
+    return text.strip()

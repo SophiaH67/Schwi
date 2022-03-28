@@ -6,7 +6,6 @@ class Command(BaseCommand):
   aliases = ["thanks", "thank", "thx"]
 
   async def run(self, ctx: MessageContext):
-    print("ThanksCommand")
     await ctx.info(
       ["I don't know what I did, but no problem", "You're welcome?", "No problem"]
     )

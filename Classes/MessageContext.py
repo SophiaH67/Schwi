@@ -23,7 +23,12 @@ class MessageContext:
 
   async def run(self):
     if str.lower(self.lcommand) in self.schwi.commands:
-      await self.schwi.commands[self.lcommand].run(self)
+      try:
+        result = await self.schwi.commands[self.lcommand].run(self)
+        if result is not None:
+          await self.success(result)
+      except Exception as e:
+        await self.error(str(e))
 
   def _get_text(self, message: str | list[str]):
     if isinstance(message, str):
