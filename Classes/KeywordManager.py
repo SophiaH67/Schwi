@@ -60,6 +60,8 @@ class KeywordManager:
     )
 
     interested_users = self.get_interested_users(content)
+    if str(ctx.message.author.id) in interested_users:
+      interested_users.remove(str(ctx.message.author.id))
     if len(interested_users) > 0:
       ping_string = ", ".join(map(lambda x: f"<@{x}>", interested_users))
       await ctx.info(
