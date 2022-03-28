@@ -14,3 +14,4 @@ class Command(BaseCommand):
       raise Exception("You must mention a user")
     user = ctx.message.mentions[0]
     self.schwi.permissions_manager.set_permissions(user.id, PermissionLevel.ADMIN)
+    return f"{user.mention} is now an admin"
