@@ -1,7 +1,7 @@
 from random import choice
 
 
-def BotSyntaxError(Exception):
+def BotSyntaxException(Exception):
   def __str__(self):
     return choice(
       [

@@ -1,4 +1,3 @@
-from redis.exceptions import ResponseError
 from Classes.BaseCommand import BaseCommand
 
 

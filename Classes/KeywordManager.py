@@ -29,7 +29,7 @@ class KeywordManager:
       self.keywords[keyword].append(user_id)
       self.redis.sadd("schwi:keywords:{}".format(keyword), user_id)
     else:
-      raise UserAlreadyInKeywordError(keyword)
+      raise UserAlreadyInKeywordException(keyword)
 
   def remove_keyword(self, keyword: str, user_id: int):
     keyword = keyword.lower()
@@ -76,7 +76,7 @@ class KeywordManager:
       )
 
 
-class KeywordNotFoundError(Exception):
+class KeywordNotFoundException(Exception):
   def __init__(self, keyword: str):
     self.keyword = keyword
 
@@ -84,7 +84,7 @@ class KeywordNotFoundError(Exception):
     return "Keyword not found: {}".format(self.keyword)
 
 
-class UserAlreadyInKeywordError(Exception):
+class UserAlreadyInKeywordException(Exception):
   def __init__(self, keyword: str):
     self.keyword = keyword
 

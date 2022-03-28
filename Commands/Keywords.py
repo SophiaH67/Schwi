@@ -1,6 +1,6 @@
 from secrets import choice
 from Classes.BaseCommand import BaseCommand
-from Classes.Exceptions.SyntaxError import BotSyntaxError
+from Classes.Exceptions.SyntaxException import BotSyntaxException
 from Classes.MessageContext import MessageContext
 
 
@@ -19,7 +19,7 @@ class Command(BaseCommand):
     if subcommand == "add":
       keyword = ctx.args[1]
       if keyword is None:
-        raise BotSyntaxError()
+        raise BotSyntaxException()
       self.schwi.keyword_manager.add_keyword(keyword, str(ctx.message.author.id))
       return [
         f"Added keyword {keyword} to your list.",
@@ -28,7 +28,7 @@ class Command(BaseCommand):
     elif subcommand == "remove":
       keyword = ctx.args[1]
       if keyword is None:
-        raise BotSyntaxError()
+        raise BotSyntaxException()
       self.schwi.keyword_manager.remove_keyword(keyword, str(ctx.message.author.id))
       return [
         f"Removed keyword {keyword} from your list.",
