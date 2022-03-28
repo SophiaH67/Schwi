@@ -15,7 +15,7 @@ class Command(BaseCommand):
     ctx.command = ctx.args.pop(0)
 
     # Proof of work
-    difficulity = 5
+    difficulity = 6
     # hash_prefix is a random hex string of length difficulity
     hash_prefix = "".join(choice("0123456789abcdef") for _ in range(difficulity))
     string_prefix = choice(["Gaming", "SchwiIsAwesome",]) + "".join(
