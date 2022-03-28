@@ -25,8 +25,11 @@ class KeywordManager:
     keyword = keyword.lower()
     if keyword not in self.keywords:
       self.keywords[keyword] = []
-    self.keywords[keyword].append(user_id)
-    self.redis.sadd("schwi:keywords:{}".format(keyword), user_id)
+    if user_id not in self.keywords[keyword]:
+      self.keywords[keyword].append(user_id)
+      self.redis.sadd("schwi:keywords:{}".format(keyword), user_id)
+    else:
+      raise UserAlreadyInKeywordError(keyword)
 
   def remove_keyword(self, keyword: str, user_id: int):
     keyword = keyword.lower()
@@ -79,3 +82,11 @@ class KeywordNotFoundError(Exception):
 
   def __str__(self):
     return "Keyword not found: {}".format(self.keyword)
+
+
+class UserAlreadyInKeywordError(Exception):
+  def __init__(self, keyword: str):
+    self.keyword = keyword
+
+  def __str__(self):
+    return "You are already in the list for keyword {}".format(self.keyword)
