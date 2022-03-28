@@ -8,4 +8,8 @@ class Command(BaseCommand):
     res = self.schwi.redis.execute_command(" ".join(ctx.args))
     if res is None:
       return "None"
-    return res.decode("utf-8")
+    if isinstance(res, bytes):
+      return res.decode("utf-8")
+    if isinstance(res, list):
+      return ", ".join(res)
+    return res
