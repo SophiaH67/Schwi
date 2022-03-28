@@ -11,5 +11,6 @@ class Command(BaseCommand):
     if isinstance(res, bytes):
       return res.decode("utf-8")
     if isinstance(res, list):
-      return ", ".join(res)
+      res = map(lambda x: x.decode("utf-8"), res)
+      return "\n".join(res)
     return res
