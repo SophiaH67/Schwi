@@ -34,7 +34,6 @@ class Schwi(discord.Client):
     print(f"Schwi is ready as {self.user}")
 
   async def on_message(self, message):
-    print(f"{message.author}: {message.content}")
     if message.author == self.user:
       return
 
