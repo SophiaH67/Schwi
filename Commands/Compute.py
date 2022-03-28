@@ -1,7 +1,6 @@
 from Classes.BaseCommand import BaseCommand
 from Classes.MessageContext import MessageContext
 import openai
-import os
 import config
 
 openai.api_key = config.openai_key
