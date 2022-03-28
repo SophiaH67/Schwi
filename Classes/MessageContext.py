@@ -8,6 +8,8 @@ if typing.TYPE_CHECKING:
 
 
 class MessageContext:
+  permission_level = None
+
   def __init__(self, message: Message, schwi: "Schwi"):
     self.schwi = schwi
     self.message = message
@@ -16,12 +18,19 @@ class MessageContext:
     if len(self.args) == 0:
       return
     self.command = self.args.pop(0)
-    self.lcommand = str.lower(self.command)
 
     # Set methods
     self._reply = self.message.reply
 
+  @property
+  def lcommand(self):
+    return self.command.lower()
+
   async def run(self):
+    if self.permission_level is None:
+      self.permission_level = await self.schwi.permissions_manager.get_permissions(
+        self.message.author.id
+      )
     if str.lower(self.lcommand) in self.schwi.commands:
       try:
         result = await self.schwi.commands[self.lcommand].run(self)

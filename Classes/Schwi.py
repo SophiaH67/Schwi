@@ -1,3 +1,4 @@
+from Classes.PermissionsManager import PermissionsManager
 import config
 import discord
 import os
@@ -16,6 +17,7 @@ class Schwi(discord.Client):
     super().__init__()
     self.redis = redis.Redis(host=config.redis_host, port=config.redis_port, db=0)
     self.keyword_manager = KeywordManager(self.redis)
+    self.permissions_manager = PermissionsManager(self)
     self.load_commands()
 
   def load_commands(self):

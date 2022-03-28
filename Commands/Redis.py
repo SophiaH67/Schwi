@@ -1,10 +1,14 @@
 from Classes.BaseCommand import BaseCommand
+from Classes.Exceptions.PermissionsException import PermissionsException
+from Classes.PermissionsManager import PermissionLevel
 
 
 class Command(BaseCommand):
   aliases = ["redis"]
 
   async def run(self, ctx):
+    if ctx.permission_level != PermissionLevel.ADMIN:
+      raise PermissionsException()
     res = self.schwi.redis.execute_command(" ".join(ctx.args))
     if res is None:
       return "None"
