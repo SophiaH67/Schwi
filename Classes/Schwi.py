@@ -37,22 +37,6 @@ class Schwi(discord.Client):
 
     ctx = MessageContext(message, self)
 
-    content = message.content.lower() + (
-      # Add embeds if they exist
-      " " + str(message.embeds[0].description)
-      if len(message.embeds) > 0
-      else ""
-    )
-
-    interested_users = self.keyword_manager.get_interested_users(content)
-    if len(interested_users) > 0:
-      ping_string = ", ".join(map(lambda x: f"<@{x}>", interested_users))
-      await ctx.info(
-        [
-          f"{ping_string}, you should probably read this.",
-          f"{ping_string}, you might be interested in this.",
-          f"Oi onii-chan get over here {ping_string}.",
-        ]
-      )
+    await self.keyword_manager.ping_interested_users(ctx)
 
     await ctx.run()

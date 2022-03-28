@@ -1,5 +1,7 @@
 import redis
 
+from Classes.MessageContext import MessageContext
+
 
 class KeywordManager:
   def __init__(self, redis: redis.Redis):
@@ -48,6 +50,25 @@ class KeywordManager:
       if keyword in text:
         interested_users += self.keywords[keyword]
     return interested_users
+
+  async def ping_interested_users(self, ctx: MessageContext):
+    content = ctx.message.content.lower() + (
+      # Add embeds if they exist
+      " " + str(ctx.message.embeds[0].description)
+      if len(ctx.message.embeds) > 0
+      else ""
+    )
+
+    interested_users = self.get_interested_users(content)
+    if len(interested_users) > 0:
+      ping_string = ", ".join(map(lambda x: f"<@{x}>", interested_users))
+      await ctx.info(
+        [
+          f"{ping_string}, you should probably read this.",
+          f"{ping_string}, you might be interested in this.",
+          f"Oi onii-chan get over here {ping_string}.",
+        ]
+      )
 
 
 class KeywordNotFoundError(Exception):
