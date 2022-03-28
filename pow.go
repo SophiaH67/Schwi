@@ -19,13 +19,15 @@ func main() {
 
 	difficulty := len(hash_prefix)
 	
-	for i := 0; i < 10_000_000_000; i++ {
+	i := 0
+	for {
+		i++
 		hash := md5.Sum([]byte(string_prefix + strconv.Itoa(i)))
 		if hex.EncodeToString(hash[:])[:difficulty] == hash_prefix[:difficulty] {
 			fmt.Printf("\n%s %x\n",string_prefix + strconv.Itoa(i), hash)
 			break
 		}
-		// every 100 iterations, print a .
+		// every 10 million iterations, print a . to indicate progress
 		if i % 10_000_000 == 0 {
 			fmt.Print(".")
 		}
