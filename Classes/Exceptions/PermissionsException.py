@@ -1,10 +1,7 @@
 from random import choice
 
 
-def PermissionsException(Exception):
-  def __init__(self):
-    pass
-
+class PermissionsException(Exception):
   def __str__(self):
     return choice(
       [
