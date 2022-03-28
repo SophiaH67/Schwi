@@ -16,9 +16,8 @@ class Command(BaseCommand):
 
     # Proof of work
     difficulity = 5
-    hash_prefix = "".join(
-      map(lambda x: choice(list("abcdefghijklmnopqrstuvwxyz")), range(difficulity))
-    )
+    # hash_prefix is a random hex string of length difficulity
+    hash_prefix = "".join(choice("0123456789abcdef") for _ in range(difficulity))
     string_prefix = choice(["Gaming", "SchwiIsAwesome",]) + "".join(
       map(lambda x: choice(list("abcdefghijklmnopqrstuvwxyz")), range(difficulity))
     )
@@ -28,7 +27,7 @@ class Command(BaseCommand):
     )
 
     def check(m):
-      return m.author == ctx.author and m.channel == ctx.channel
+      return m.author == ctx.message.author and m.channel == ctx.message.channel
 
     msg = await self.schwi.wait_for("message", check=check)
     if md5(msg.content.encode("utf-8")).hexdigest()[:difficulity] != hash_prefix:
