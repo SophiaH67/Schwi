@@ -1,4 +1,4 @@
 discord.py
 openai
 redis
-dotenv
+python-dotenv
