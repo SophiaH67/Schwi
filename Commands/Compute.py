@@ -2,8 +2,9 @@ from Classes.BaseCommand import BaseCommand
 from Classes.MessageContext import MessageContext
 import openai
 import os
+import config
 
-openai.api_key = os.getenv("OPENAI_KEY")
+openai.api_key = config.openai_key
 
 
 class Command(BaseCommand):

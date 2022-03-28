@@ -1,7 +1,8 @@
 from Classes.Schwi import Schwi
 import os
+import config
 
 schwi = Schwi()
 
 
-schwi.run(os.environ["DISCORD_TOKEN"])
+schwi.run(config.discord_token)

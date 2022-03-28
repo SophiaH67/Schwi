@@ -1,3 +1,4 @@
+import config
 import discord
 import os
 import importlib
@@ -13,7 +14,7 @@ class Schwi(discord.Client):
 
   def __init__(self):
     super().__init__()
-    self.redis = redis.Redis(host="localhost", port=6379, db=0)
+    self.redis = redis.Redis(host=config.redis_host, port=config.redis_port, db=0)
     self.keyword_manager = KeywordManager(self.redis)
     self.load_commands()
 
