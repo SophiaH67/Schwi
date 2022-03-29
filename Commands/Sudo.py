@@ -15,7 +15,7 @@ class Command(BaseCommand):
       raise Exception("Usage: sudo <command>")
     ctx.command = ctx.args.pop(0)
 
-    proof_of_work = ProofOfWork(ctx.message, 6)
+    proof_of_work = ProofOfWork(ctx.message, 7)
 
     await ctx.info(
       f'Solve a proof of work with the string prefix of "{proof_of_work.string_prefix}" and the hash prefix of "{proof_of_work.hash_prefix}"'
