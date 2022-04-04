@@ -64,6 +64,10 @@ class BaseService:
   """
   Abstract Service
   """
+  dependencies: str[] = []
+  """
+  List of service names that this service depends on.
+  """
   def __init__(self, schwi):
     self.schwi = schwi
 
