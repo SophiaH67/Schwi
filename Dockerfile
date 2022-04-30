@@ -1,6 +1,15 @@
-FROM python:3.10-slim
+FROM node:16 as builder
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 COPY . .
-CMD ["python", "main.py"]
+RUN ./node_modules/.bin/tsc
+
+FROM node:16 as runner
+WORKDIR /app
+COPY package.json .
+COPY package-lock.json .
+RUN npm ci
+COPY --from=builder /app/dist .
+CMD ["node", "index.js"]
