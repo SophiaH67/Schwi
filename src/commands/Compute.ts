@@ -21,7 +21,7 @@ export default class Compute implements Command {
     process.env.OPENAI_KEY || assert("OPENAI_KEY") || ""
   );
 
-  public async run(conversation: Conversation, args: string[]) {
+  public async run(_conversation: Conversation, args: string[]) {
     let prompt: string;
     if (args[0].toLowerCase() === "compute") {
       prompt = args.slice(1).join(" ");

@@ -1,4 +1,4 @@
-import "dotenv/config";
+require("dotenv").config();
 import { ErisClient } from "eris-boreas";
 import { Client, Intents } from "discord.js";
 

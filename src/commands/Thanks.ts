@@ -7,7 +7,7 @@ export default class Thanks implements Command {
   public description = "Glad I could help";
   public usage = "Thanks!";
 
-  public async run(conversation: Conversation, args: string[]) {
+  public async run(_conversation: Conversation, _args: string[]) {
     return info([
       "I don't know what I did, but no problem",
       "You're welcome?",

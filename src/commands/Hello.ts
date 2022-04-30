@@ -7,7 +7,7 @@ export default class Hello implements Command {
   public description = ":hello:";
   public usage = "Hello!";
 
-  public async run(conversation: Conversation, args: string[]) {
+  public async run(_conversation: Conversation, _args: string[]) {
     return info(["Hello", "Hi", "Konbanwa", "Ohayo"]);
   }
 }

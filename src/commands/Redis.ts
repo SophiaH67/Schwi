@@ -1,6 +1,6 @@
 import Command from "eris-boreas/lib/src/conversation/Command";
 import Conversation from "eris-boreas/lib/src/conversation/Conversation";
-import { info, success } from "../lib/transformer";
+import { success } from "../lib/transformer";
 
 export default class Reds implements Command {
   public aliases = ["redis", "set", "get", "del"];
@@ -23,6 +23,9 @@ export default class Reds implements Command {
     } else if (command.toLowerCase() == "del") {
       //@ts-ignore
       return success((await redis.del(args.join(" "))).toString());
+    } else {
+      throw new Error("Invalid redis command");
+      return ""; // never reached but typescript complains
     }
   }
 }
