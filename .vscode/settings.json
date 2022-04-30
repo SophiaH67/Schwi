@@ -1,3 +1,3 @@
 {
-  "conventionalCommits.scopes": ["commands"]
+  "conventionalCommits.scopes": ["commands", ".gitignore"]
 }
