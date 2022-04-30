@@ -1,5 +1,5 @@
-import Command from "../../../eris-boreas/src/conversation/Command";
-import Conversation from "../../../eris-boreas/src/conversation/Conversation";
+import Command from "eris-boreas/lib/src/conversation/Command";
+import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import { success } from "../lib/transformer";
 import OpenAI from "openai-api";
 import assert from "assert";

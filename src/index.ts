@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { ErisClient } from "../../eris-boreas/src/";
+import { ErisClient } from "eris-boreas";
 import { Client, Intents } from "discord.js";
 
 class Schwi extends ErisClient {
