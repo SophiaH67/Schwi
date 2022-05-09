@@ -14,6 +14,12 @@ export default class Compute implements Command {
     "where",
     "how",
     "can",
+    "should",
+    "write",
+    "which",
+    "do i",
+    "explain",
+    "does"
   ];
   public description = "GPT3 compute";
   public usage = "compute <prompt>";
