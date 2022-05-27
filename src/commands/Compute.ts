@@ -67,6 +67,7 @@ export default class Compute implements Command {
       prompt: prompt.join("\n"),
       maxTokens: 64,
       stop: [...usernames].map((u) => `${u}:`),
+      temperature: 0.8,
     });
 
     let text = gptResponse.data.choices[0].text;
