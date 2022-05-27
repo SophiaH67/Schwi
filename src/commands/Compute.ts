@@ -44,6 +44,8 @@ export default class Compute implements Command {
       -1
     );
 
+    let usernames: Set<string> = new Set();
+
     prompt
       .reverse()
       // Remove last item, which is the current message
@@ -53,15 +55,28 @@ export default class Compute implements Command {
     // Add `Bot:`
     prompt.push(`${conversation.eris.bot.user?.username}:`);
 
+    prompt.forEach((p) => {
+      const username = p.split(":")[0];
+      if (username) {
+        usernames.add(username);
+      }
+    });
+
     const gptResponse = await this.openai.complete({
       engine: "text-davinci-002",
       prompt: prompt.join("\n"),
       maxTokens: 64,
+      stop: [...usernames].map((u) => `${u}:`),
     });
 
     let text = gptResponse.data.choices[0].text;
     text = text.trim();
 
-    return success(text);
+    // If it contains a : in the first 4 words, return it
+    if (text.split(" ").slice(0, 4).join(" ").includes(":")) {
+      return text;
+    } else {
+      return success(text); // Add the : thing
+    }
   }
 }
