@@ -19,7 +19,10 @@ export default class Compute implements Command {
     "which",
     "do i",
     "explain",
-    "does"
+    "does",
+    "is that",
+    "is it",
+    "is this",
   ];
   public description = "GPT3 compute";
   public usage = "compute <prompt>";
@@ -27,20 +30,35 @@ export default class Compute implements Command {
     process.env.OPENAI_KEY || assert("OPENAI_KEY") || ""
   );
 
-  public async run(_conversation: Conversation, args: string[]) {
-    let prompt: string;
+  public async run(conversation: Conversation, args: string[]) {
+    let current: string;
     if (args[0].toLowerCase() === "compute") {
-      prompt = args.slice(1).join(" ");
+      current = args.slice(1).join(" ");
     } else {
-      prompt = args.join(" ");
+      current = args.join(" ");
     }
-    prompt = prompt + "\n";
+
+    const prompt = await conversation.eris.redis.lRange(
+      `schwi:context:${conversation.messages[0].channelId}`,
+      0,
+      -1
+    );
+
+    prompt
+      .reverse()
+      // Remove last item, which is the current message
+      .pop();
+    // Add current message
+    prompt.push(`${conversation.messages[0].author.username}: ${current}`);
+    // Add `Bot:`
+    prompt.push(`${conversation.eris.bot.user?.username}:`);
 
     const gptResponse = await this.openai.complete({
       engine: "text-davinci-002",
-      prompt,
+      prompt: prompt.join("\n"),
       maxTokens: 64,
     });
+
     let text = gptResponse.data.choices[0].text;
     text = text.trim();
 
