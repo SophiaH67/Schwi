@@ -22,6 +22,9 @@ export default class Compute implements Command {
     "is that",
     "is it",
     "is this",
+    "schwi",
+    "<@956296913014124564>",
+    "<@!956296913014124564>",
   ];
   public description = "GPT3 compute";
   public usage = "compute <prompt>";
