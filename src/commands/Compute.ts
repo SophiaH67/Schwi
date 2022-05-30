@@ -2,6 +2,7 @@ import Command from "eris-boreas/lib/src/conversation/Command";
 import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import { success } from "../lib/transformer";
 import { Configuration, OpenAIApi } from "openai";
+import Context from "../lib/context";
 
 export default class Compute implements Command {
   public aliases = [
@@ -31,28 +32,16 @@ export default class Compute implements Command {
   });
   private openai: OpenAIApi = new OpenAIApi(this.config);
 
-  public async run(conversation: Conversation, args: string[]) {
-    let current: string;
-    if (args[0].toLowerCase() === "compute") {
-      current = args.slice(1).join(" ");
-    } else {
-      current = args.join(" ");
-    }
-
-    const prompt = await conversation.eris.redis.lRange(
-      `schwi:context:${conversation.messages[0].channelId}`,
-      0,
-      -1
+  public async run(conversation: Conversation, _args: string[]) {
+    const prompt = await Context.get(
+      conversation.messages[0],
+      conversation.eris
     );
 
     let usernames: Set<string> = new Set();
 
-    prompt
-      .reverse()
-      // Remove last item, which is the current message
-      .pop();
-    // Add current message
-    prompt.push(`${conversation.messages[0].author.username}: ${current}`);
+    prompt.reverse();
+
     // Add `Bot:`
     prompt.push(`${conversation.eris.bot.user?.username}:`);
 
@@ -62,6 +51,8 @@ export default class Compute implements Command {
         usernames.add(username);
       }
     });
+
+    console.log("Prompt:", prompt);
 
     const gptResponse = await this.openai.createCompletion("text-davinci-002", {
       prompt: prompt.join("\n"),

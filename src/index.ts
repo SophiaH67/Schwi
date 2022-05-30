@@ -1,6 +1,7 @@
 require("dotenv").config();
 import { ErisClient } from "eris-boreas";
 import { Client, Intents, Message } from "discord.js";
+import Context from "./lib/context";
 
 class Schwi extends ErisClient {
   get name() {
@@ -14,16 +15,7 @@ class Schwi extends ErisClient {
   }
 
   public async onMessage(msg: Message<boolean>): Promise<void> {
-    await this.redis.LPUSH(
-      `schwi:context:${msg.channelId}`,
-      `${msg.author.username}: ${msg.content}`
-    );
-
-    // // Expire after 30 minutes
-    // await this.redis.EXPIRE(`schwi:context:${msg.channelId}`, 60 * 30);
-    // LTRIM to keep the list at most 10 items
-    await this.redis.lTrim(`schwi:context:${msg.channelId}`, 0, 9);
-
+    await Context.add(msg, this);
     await super.onMessage(msg);
   }
 }
