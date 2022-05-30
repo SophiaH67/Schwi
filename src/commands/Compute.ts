@@ -52,8 +52,6 @@ export default class Compute implements Command {
       }
     });
 
-    console.log("Prompt:", prompt);
-
     const gptResponse = await this.openai
       .createCompletion("text-davinci-002", {
         prompt: prompt.join("\n"),
@@ -64,8 +62,11 @@ export default class Compute implements Command {
       .catch((e) => {
         // e is instanceof a axios error
         if (e.isAxiosError) {
+          console.error(e);
           console.log(e.request?.data);
           console.log(e.response?.data);
+        } else {
+          throw e;
         }
       });
 

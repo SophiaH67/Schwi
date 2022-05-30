@@ -74,12 +74,16 @@ export default class ContextManager {
   public replaceUsernamesWithMentions(message: string) {
     const usernames = message.match(/@"(.*?)"/g);
     if (usernames) {
-      for (const username of usernames) {
+      for (const pingString of usernames) {
+        // Remove first 2 characters and last character
+        const username = pingString.slice(2, -1);
         const user = this.schwi.bot.users.cache.find(
           (u) => u.username.toLowerCase() === username.toLowerCase()
         );
+
         if (!user) continue;
-        message = message.replace(username, `<@${user.id}>`);
+
+        message = message.replace(pingString, `<@${user.id}>`);
       }
     }
     return message;
