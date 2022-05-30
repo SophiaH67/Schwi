@@ -3,8 +3,8 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
-# Replace "export class View" with "export interface View" in node_modules/compromise/types/view/one.ts
-RUN sed -i 's/export class View/export interface View/g' node_modules/compromise/types/view/one.ts
+# Replace "class View" with "interface View" in node_modules/compromise/types/view/one.ts
+RUN sed -i 's/class View/interface View/g' node_modules/compromise/types/view/one.ts
 COPY . .
 RUN npm run build
 
