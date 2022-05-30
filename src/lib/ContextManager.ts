@@ -7,17 +7,16 @@ export default class ContextManager {
     const prompt = await this.schwi.redis.lRange(
       `schwi:context:${message.channelId}`,
       0,
-      -1
+      10
     );
     return prompt;
   }
 
   public async add(message: Message<boolean>) {
-    console.log("Adding to context:", message.content);
     const last = await this.schwi.redis.lRange(
       `schwi:context:${message.channelId}`,
-      -1,
-      -1
+      0,
+      0
     );
     if (last.length !== 0) {
       let [username, text] = last[0].split(":");
@@ -25,10 +24,12 @@ export default class ContextManager {
         // Update the last item in the list to add the current message
         await this.schwi.redis.lSet(
           `schwi:context:${message.channelId}`,
-          -1,
+          0,
           `${
             message.author.username
-          }: ${text}\n${this.replaceMentionsWithUsernames(message.content)}`
+          }: ${text}\n${await this.replaceMentionsWithUsernames(
+            message.content
+          )}`
         );
       } else {
         this._addToContext(message);
@@ -36,16 +37,16 @@ export default class ContextManager {
     } else {
       this._addToContext(message);
     }
-    // await schwi.redis.lTrim(`schwi:context:${message.channelId}`, 0, 9);
   }
 
   private async _addToContext(message: Message<boolean>) {
-    return await this.schwi.redis.lPush(
+    await this.schwi.redis.lPush(
       `schwi:context:${message.channelId}`,
-      `${message.author.username}: ${this.replaceMentionsWithUsernames(
+      `${message.author.username}: ${await this.replaceMentionsWithUsernames(
         message.content
       )}`
     );
+    await this.schwi.redis.lTrim(`schwi:context:${message.channelId}`, 0, 9);
   }
 
   public async replaceMentionsWithUsernames(message: string) {
@@ -58,6 +59,7 @@ export default class ContextManager {
         message = message.replace(mention, `@"${user.username}"`);
       }
     }
+    return message;
   }
 
   public replaceUsernamesWithMentions(message: string) {
