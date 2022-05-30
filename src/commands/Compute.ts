@@ -1,8 +1,7 @@
 import Command from "eris-boreas/lib/src/conversation/Command";
 import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import { success } from "../lib/transformer";
-import OpenAI from "openai-api";
-import assert from "assert";
+import { Configuration, OpenAIApi } from "openai";
 
 export default class Compute implements Command {
   public aliases = [
@@ -26,9 +25,10 @@ export default class Compute implements Command {
   ];
   public description = "GPT3 compute";
   public usage = "compute <prompt>";
-  private openai = new OpenAI(
-    process.env.OPENAI_KEY || assert("OPENAI_KEY") || ""
-  );
+  private config: Configuration = new Configuration({
+    apiKey: process.env.OPENAI_KEY,
+  });
+  private openai: OpenAIApi = new OpenAIApi(this.config);
 
   public async run(conversation: Conversation, args: string[]) {
     let current: string;
@@ -62,15 +62,16 @@ export default class Compute implements Command {
       }
     });
 
-    const gptResponse = await this.openai.complete({
-      engine: "text-davinci-002",
+    const gptResponse = await this.openai.createCompletion("text-davinci-002", {
       prompt: prompt.join("\n"),
-      maxTokens: 64,
+      max_tokens: 64,
       stop: [...usernames].map((u) => `${u}:`),
       temperature: 0.8,
     });
 
-    let text = gptResponse.data.choices[0].text;
+    let text = gptResponse?.data?.choices?.[0]?.text;
+    if (!text) return;
+
     text = text.trim();
 
     // If it contains a : in the first 4 words, return it
