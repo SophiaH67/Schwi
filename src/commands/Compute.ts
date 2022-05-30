@@ -2,7 +2,7 @@ import Command from "eris-boreas/lib/src/conversation/Command";
 import Conversation from "eris-boreas/lib/src/conversation/Conversation";
 import { success } from "../lib/transformer";
 import { Configuration, OpenAIApi } from "openai";
-import Context from "../lib/context";
+import ContextManager from "../lib/ContextManager";
 
 export default class Compute implements Command {
   public aliases = [
@@ -33,10 +33,8 @@ export default class Compute implements Command {
   private openai: OpenAIApi = new OpenAIApi(this.config);
 
   public async run(conversation: Conversation, _args: string[]) {
-    const prompt = await Context.get(
-      conversation.messages[0],
-      conversation.eris
-    );
+    const contextManager = new ContextManager(conversation.eris);
+    const prompt = await contextManager.get(conversation.messages[0]);
 
     let usernames: Set<string> = new Set();
 
@@ -65,6 +63,13 @@ export default class Compute implements Command {
     if (!text) return;
 
     text = text.trim();
+    text = text.replace(/\n/g, " ");
+
+    while (text.includes("  ")) {
+      text = text.replace("  ", " ");
+    }
+
+    text = contextManager.replaceUsernamesWithMentions(text);
 
     // If it contains a : in the first 4 words, return it
     if (text.split(" ").slice(0, 4).join(" ").includes(":")) {

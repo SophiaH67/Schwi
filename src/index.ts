@@ -1,9 +1,10 @@
 require("dotenv").config();
 import { ErisClient } from "eris-boreas";
 import { Client, Intents, Message } from "discord.js";
-import Context from "./lib/context";
+import ContextManager from "./lib/ContextManager";
 
 class Schwi extends ErisClient {
+  public contextManager = new ContextManager(this);
   get name() {
     return "Schwi";
   }
@@ -15,7 +16,7 @@ class Schwi extends ErisClient {
   }
 
   public async onMessage(msg: Message<boolean>): Promise<void> {
-    await Context.add(msg, this);
+    await this.contextManager.add(msg);
     await super.onMessage(msg);
   }
 }
