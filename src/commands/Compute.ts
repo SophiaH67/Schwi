@@ -44,7 +44,9 @@ export default class Compute implements Command {
     prompt.push(`${conversation.eris.bot.user?.username}:`);
 
     prompt.forEach((p) => {
+      if (usernames.size >= 4) return;
       const username = p.split(":")[0];
+
       if (username) {
         usernames.add(username);
       }
@@ -52,12 +54,20 @@ export default class Compute implements Command {
 
     console.log("Prompt:", prompt);
 
-    const gptResponse = await this.openai.createCompletion("text-davinci-002", {
-      prompt: prompt.join("\n"),
-      max_tokens: 64,
-      stop: [...usernames].map((u) => `${u}:`),
-      temperature: 0.8,
-    });
+    const gptResponse = await this.openai
+      .createCompletion("text-davinci-002", {
+        prompt: prompt.join("\n"),
+        max_tokens: 64,
+        stop: [...usernames].map((u) => `${u}:`),
+        temperature: 0.8,
+      })
+      .catch((e) => {
+        // e is instanceof a axios error
+        if (e.isAxiosError) {
+          console.log(e.request?.data);
+          console.log(e.response?.data);
+        }
+      });
 
     let text = gptResponse?.data?.choices?.[0]?.text;
     if (!text) return;

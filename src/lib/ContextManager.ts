@@ -55,8 +55,17 @@ export default class ContextManager {
       for (const mention of mentions) {
         const id = mention.match(/\d+/)?.[0];
         if (!id) continue;
-        const user = await this.schwi.bot.users.fetch(id);
-        message = message.replace(mention, `@"${user.username}"`);
+        try {
+          const user = await this.schwi.bot.users.fetch(id);
+          message = message.replace(mention, `@"${user.username}"`);
+        } catch (e) {
+          //@ts-expect-error
+          if (e.code === 10013) {
+            // User not found
+            continue;
+          }
+          throw e;
+        }
       }
     }
     return message;
