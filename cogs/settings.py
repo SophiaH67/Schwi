@@ -1,5 +1,6 @@
 from discord.ext import commands
 from sqlalchemy import Column, String
+from lib.minimum_permission_level import is_admin
 
 
 class Settings(commands.Cog):
@@ -12,9 +13,14 @@ class Settings(commands.Cog):
             key = Column(String, primary_key=True)
             value = Column(String)
 
+            def __init__(self, key, value):
+                self.key = key
+                self.value = value
+
         self.db.BotSettings = BotSettings
 
-    @commands.group()
+    @commands.group(name="settings")
+    @is_admin
     async def settings(self, ctx):
         if ctx.invoked_subcommand is None:
             pass

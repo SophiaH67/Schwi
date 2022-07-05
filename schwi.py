@@ -1,16 +1,18 @@
 from dotenv import load_dotenv
+
+load_dotenv()
 from cogs.Db import Db
 from cogs.UserManager import UserManager
+from cogs.Context import Context
+from cogs.NaturalLanguage import NaturalLanguage
 from lib.minimum_permission_level import UserNotAuthorizedException
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 from cogs.settings import Settings
 
 import os
 from discord.ext import commands
-
-load_dotenv()
 
 
 class Schwi(commands.Bot):
@@ -22,6 +24,8 @@ class Schwi(commands.Bot):
         self.add_cog(Db(self))
         self.add_cog(Settings(self))
         self.add_cog(UserManager(self))
+        self.add_cog(Context(self))
+        self.add_cog(NaturalLanguage(self))
 
         db = self.get_cog("Db")
         db.Base.metadata.create_all(db.engine)
