@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from cogs.Db import Db
-from cogs.UserManager import UserManager, UserNotAuthorizedException
+from cogs.UserManager import UserManager
+from lib.minimum_permission_level import UserNotAuthorizedException
 import logging
 
 logging.basicConfig(level=logging.INFO)

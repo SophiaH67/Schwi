@@ -2,8 +2,7 @@ from discord.ext import commands
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, create_engine
 from sqlalchemy.orm import sessionmaker
-
-from cogs.UserManager import PermissionLevel, minimum_permission_level
+from lib.minimum_permission_level import is_admin
 
 
 class Db(commands.Cog):
@@ -22,7 +21,7 @@ class Db(commands.Cog):
         self.BotSettings = BotSettings
 
     @commands.command(name="migrate")
-    @minimum_permission_level(PermissionLevel.ADMIN)
+    @is_admin
     async def migrate(self, ctx):
         self.Base.metadata.create_all(self.engine)
         await ctx.send("Migration complete.")
