@@ -25,10 +25,6 @@ class Context(commands.Cog):
         self.settings = schwi.get_cog("Settings")
 
     @property
-    async def window_size(self):
-        return await self.settings.get_or_create_setting("context_window_size", "10")
-
-    @property
     async def max_tokens_per_message(self):
         return await self.settings.get_or_create_setting(
             "context_max_tokens_per_message", "64"
