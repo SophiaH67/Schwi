@@ -28,6 +28,8 @@ class Context(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        if message.content == "##compute##":
+            return
         if not message.channel.id in self.context:
             self.context[message.channel.id] = ListWithMaxLength(10)
         context_list = self.context[message.channel.id]

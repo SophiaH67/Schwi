@@ -26,18 +26,21 @@ class UserManager(commands.Cog):
             __tablename__ = "users"
             id = Column(String, primary_key=True)
             permission_level = Column(Integer)
+            name = Column(String)
 
-            def __init__(self, id: str, permission_level: int = 0):
+            def __init__(self, id: str, name: str, permission_level: int = 0):
                 self.id = id
+                self.name = name
                 self.permission_level = permission_level
 
         self.db.User = User
 
-    def get_or_create_user(self, id: str):
-        user = self.db.Session.query(self.db.User).filter_by(id=id).first()
+    def get_or_create_user(self, member: discord.Member):
+        user = self.db.Session.query(self.db.User).filter_by(id=member.id).first()
         if user is None:
-            user = self.db.User(id)
+            user = self.db.User(member.id, member.name)
             self.db.Session.add(user)
+            self.db.Session.commit()
         return user
 
     @commands.command(name="set_permission_level")
@@ -48,7 +51,7 @@ class UserManager(commands.Cog):
         self.logger.info(
             f"Setting {discord_user.name}'s permission level to {permission_level}"
         )
-        user = self.get_or_create_user(discord_user.id)
+        user = self.get_or_create_user(discord_user)
         user.permission_level = permission_level
         self.db.Session.commit()
         await ctx.send(

@@ -36,6 +36,7 @@ class Settings(commands.Cog):
         if setting is None:
             setting = self.db.BotSettings(key, value)
             self.db.Session.add(setting)
+            self.db.Session.commit()
         return setting.value
 
     async def set_setting(self, key: str, value: str):

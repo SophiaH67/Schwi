@@ -20,9 +20,7 @@ class UserNotAuthorizedException(Exception):
 def predicate_factory(permission_level: int):
     def predicate(ctx):
         user_manager: UserManager = ctx.bot.get_cog("UserManager")
-        user = user_manager.get_or_create_user(ctx.author.id)
-        if user is None:
-            raise UserNotAuthorizedException()
+        user = user_manager.get_or_create_user(ctx.author)
         if user.permission_level < permission_level:
             raise UserNotAuthorizedException()
         return True
