@@ -2,6 +2,7 @@ from typing import List
 from discord.ext import commands
 import logging
 from discord import Message
+from transformers import GPT2TokenizerFast
 
 
 class ListWithMaxLength(list):
@@ -20,6 +21,18 @@ class Context(commands.Cog):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.schwi = schwi
         self.context = {}
+        self.tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+        self.settings = schwi.get_cog("Settings")
+
+    @property
+    async def window_size(self):
+        return await self.settings.get_or_create_setting("context_window_size", "10")
+
+    @property
+    async def max_tokens_per_message(self):
+        return await self.settings.get_or_create_setting(
+            "context_max_tokens_per_message", "64"
+        )
 
     def get_context(self, channel_id) -> List[Message]:
         if channel_id not in self.context:
@@ -36,6 +49,20 @@ class Context(commands.Cog):
         if len(context_list) > 0:
             last_message = context_list[-1]
             if last_message.author == message.author:
-                last_message.content += f"\n{message.content}"
+                # Check if max tokens per message is exceeded
+                new_message = last_message.content + f"\n{message.content}"
+                tokens = self.tokenizer(new_message)["input_ids"]
+                if not len(tokens) > int(await self.max_tokens_per_message):
+                    last_message.content = new_message
+                    return
         else:
+            tokens = self.tokenizer(message.content)["input_ids"]
+            while len(tokens) > int(await self.max_tokens_per_message):
+                tokens.pop()
+            self.logger.debug(f"Tokens: {tokens}")
+            # Convert tokens back to string
+            message.content = " ".join(
+                [self.tokenizer.decode(t).strip() for t in tokens]
+            )
+            self.logger.debug(f"Message: {message.content}")
             context_list.append(message)
