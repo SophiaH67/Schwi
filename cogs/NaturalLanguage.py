@@ -122,15 +122,12 @@ class NaturalLanguage(commands.Cog):
 
     async def generate_prompt(self, message, context):
         prompt = f"""
-{self.schwi.user.name} is an android who is not very friendly to people she does not know.
-She doesn't like Monster Energy.
+{self.schwi.user.name} is not very friendly to people she does not know.
 """
         for user in self.db.Session.query(self.db.User).all():
             if user.permission_level >= PermissionLevel.TRUSTED:
                 prompt += f"She trusts {user.name}.\n"
         prompt += "\n"
-
-        self.logger.debug(f"After introduction: {prompt}")
 
         for message in context:
             prompt += f"{message.author.name}: {message.content}\n"
