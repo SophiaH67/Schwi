@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "dev": "nodemon --exec python schwi.py"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
