@@ -85,22 +85,7 @@ class NaturalLanguage(commands.Cog):
 
     async def answer_message(self, message):
         context = self.context.get_context(message.channel.id)
-        prompt = f"""
-{self.schwi.user.name} is an android who is not very friendly to people she does not know.
-She doesn't like Monster Energy.
-"""
-        for user in self.db.Session.query(self.db.User).all():
-            if user.permission_level >= PermissionLevel.TRUSTED:
-                prompt += f"She trusts {user.name}.\n"
-        prompt += "\n"
-
-        self.logger.debug(f"After introduction: {prompt}")
-
-        for message in context:
-            prompt += f"{message.author.name}: {message.content}\n"
-        prompt += f"{self.schwi.user.name}:"
-
-        self.logger.debug(f"Before answer: {prompt}")
+        prompt = await self.generate_prompt(message, context)
 
         # So that GPT doesn't generate stuff for other people
         recent_unique_authors = list(map(lambda message: message.author.name, context))
@@ -134,3 +119,22 @@ She doesn't like Monster Energy.
         )
         response = response.replace("\n", " ").strip()
         await message.channel.send(response)
+
+    async def generate_prompt(self, message, context):
+        prompt = f"""
+{self.schwi.user.name} is an android who is not very friendly to people she does not know.
+She doesn't like Monster Energy.
+"""
+        for user in self.db.Session.query(self.db.User).all():
+            if user.permission_level >= PermissionLevel.TRUSTED:
+                prompt += f"She trusts {user.name}.\n"
+        prompt += "\n"
+
+        self.logger.debug(f"After introduction: {prompt}")
+
+        for message in context:
+            prompt += f"{message.author.name}: {message.content}\n"
+        prompt += f"{self.schwi.user.name}:"
+
+        self.logger.debug(f"Generated prompt: {prompt}")
+        return prompt
