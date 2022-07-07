@@ -9,7 +9,7 @@ from lib.minimum_permission_level import UserNotAuthorizedException
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
-from cogs.settings import Settings
+from cogs.Settings import Settings
 
 import os
 from discord.ext import commands
