@@ -3,12 +3,12 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, create_engine
 from sqlalchemy.orm import sessionmaker
 from lib.minimum_permission_level import is_admin
-
+import os
 
 class Db(commands.Cog):
     def __init__(self, schwi):
         self.schwi = schwi
-        self.engine = create_engine("sqlite:///schwi.db")
+        self.engine = create_engine(os.environ["DATABASE_URL"])
         self.Base = declarative_base()
         self.SessionMaker = sessionmaker(bind=self.engine)
         self.Session = self.SessionMaker()
