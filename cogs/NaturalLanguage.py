@@ -4,6 +4,7 @@ import nltk
 import openai
 import numpy
 from lib.minimum_permission_level import PermissionLevel
+from lib.prompt import Prompt
 
 nltk.download("punkt")
 nltk.download("averaged_perceptron_tagger")
@@ -85,7 +86,9 @@ class NaturalLanguage(commands.Cog):
 
     async def answer_message(self, message):
         context = self.context.get_context(message.channel.id)
-        prompt = await self.generate_prompt(message, context)
+        prompt = Prompt(self.schwi)
+        await prompt.add_introduction()
+        await prompt.add_chat_context(message, context)
 
         # So that GPT doesn't generate stuff for other people
         recent_unique_authors = list(map(lambda message: message.author.name, context))
@@ -107,7 +110,7 @@ class NaturalLanguage(commands.Cog):
         response = (
             openai.Completion.create(
                 engine=await self.engine,
-                prompt=prompt,
+                prompt=str(prompt),
                 temperature=float(await self.temperature),
                 max_tokens=int(await self.max_length),
                 stop=stop_tokens,
@@ -119,19 +122,3 @@ class NaturalLanguage(commands.Cog):
         )
         response = response.replace("\n", " ").strip()
         await message.channel.send(response)
-
-    async def generate_prompt(self, message, context):
-        prompt = f"""
-{self.schwi.user.name} is not very friendly to people she does not know.
-"""
-        for user in self.db.Session.query(self.db.User).all():
-            if user.permission_level >= PermissionLevel.TRUSTED:
-                prompt += f"She trusts {user.name}.\n"
-        prompt += "\n"
-
-        for message in context:
-            prompt += f"{message.author.name}: {message.content}\n"
-        prompt += f"{self.schwi.user.name}:"
-
-        self.logger.debug(f"Generated prompt: {prompt}")
-        return prompt

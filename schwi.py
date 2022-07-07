@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
 
+from cogs.Docker import Docker
+
 load_dotenv()
 from cogs.Db import Db
 from cogs.UserManager import UserManager
@@ -26,6 +28,7 @@ class Schwi(commands.Bot):
         self.add_cog(UserManager(self))
         self.add_cog(Context(self))
         self.add_cog(NaturalLanguage(self))
+        self.add_cog(Docker(self))
 
         db = self.get_cog("Db")
         db.Base.metadata.create_all(db.engine)
