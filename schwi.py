@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 
 from cogs.Docker import Docker
+from cogs.Jellyfin import Jellyfin
+from cogs.SonarrHook import SonarrHook
 
 load_dotenv()
 from cogs.Db import Db
@@ -25,10 +27,12 @@ class Schwi(commands.Bot):
         # Load cogs
         self.add_cog(Db(self))
         self.add_cog(Settings(self))
+        self.add_cog(SonarrHook(self))
         self.add_cog(UserManager(self))
         self.add_cog(Context(self))
         self.add_cog(NaturalLanguage(self))
         self.add_cog(Docker(self))
+        self.add_cog(Jellyfin(self))
 
         db = self.get_cog("Db")
         db.Base.metadata.create_all(db.engine)
