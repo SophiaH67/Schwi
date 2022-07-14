@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands
 import discord
 from typing import TYPE_CHECKING
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, cast
 
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 
@@ -36,7 +36,11 @@ class UserManager(commands.Cog):
         self.db.User = User
 
     def get_or_create_user(self, member: discord.Member):
-        user = self.db.Session.query(self.db.User).filter_by(id=member.id).first()
+        user = (
+            self.db.Session.query(self.db.User)
+            .filter_by(id=cast(member.id, String))
+            .first()
+        )
         if user is None:
             user = self.db.User(member.id, member.name)
             self.db.Session.add(user)
