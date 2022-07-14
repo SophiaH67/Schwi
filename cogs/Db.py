@@ -1,3 +1,4 @@
+import logging
 from discord.ext import commands
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, create_engine
