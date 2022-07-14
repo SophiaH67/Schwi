@@ -9,6 +9,7 @@ import os
 class Db(commands.Cog):
     def __init__(self, schwi):
         self.schwi = schwi
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.engine = create_engine(os.environ["DATABASE_URL"])
         self.Base = declarative_base()
         self.SessionMaker = sessionmaker(bind=self.engine)
@@ -26,3 +27,8 @@ class Db(commands.Cog):
     async def migrate(self, ctx):
         self.Base.metadata.create_all(self.engine)
         await ctx.reply("Migration complete.")
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.Base.metadata.create_all(self.engine)
+        self.logger.info("Database migrated.")
