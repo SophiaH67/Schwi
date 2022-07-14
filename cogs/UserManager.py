@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands
 import discord
 from typing import TYPE_CHECKING
-from sqlalchemy import Column, Integer, String, cast
+from sqlalchemy import BigInteger, Column, Integer, String
 
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 
@@ -24,11 +24,11 @@ class UserManager(commands.Cog):
         # Register the User class with the Db class.
         class User(base):
             __tablename__ = "users"
-            id = Column(String, primary_key=True)
+            id = Column(BigInteger, primary_key=True)
             permission_level = Column(Integer)
             name = Column(String)
 
-            def __init__(self, id: str, name: str, permission_level: int = 0):
+            def __init__(self, id: int, name: str, permission_level: int = 0):
                 self.id = id
                 self.name = name
                 self.permission_level = permission_level
@@ -36,11 +36,7 @@ class UserManager(commands.Cog):
         self.db.User = User
 
     def get_or_create_user(self, member: discord.Member):
-        user = (
-            self.db.Session.query(self.db.User)
-            .filter_by(id=cast(member.id, String))
-            .first()
-        )
+        user = self.db.Session.query(self.db.User).filter_by(id=member.id).first()
         if user is None:
             user = self.db.User(member.id, member.name)
             self.db.Session.add(user)
