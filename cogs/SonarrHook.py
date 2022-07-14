@@ -14,13 +14,13 @@ class SonarrHook(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if not message.channel.name == "log":
-            return
         if not message.author.name == "Marine":
             return
         if len(message.embeds) != 1:
             return
         if not message.embeds[0].color == "#27c24c":
+            return
+        if not message.channel.name == "log":
             return
 
 
