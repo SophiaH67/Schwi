@@ -31,7 +31,7 @@ class Schwi(commands.Bot):
         self.add_cog(UserManager(self))
         self.add_cog(Context(self))
         self.add_cog(NaturalLanguage(self))
-        self.add_cog(Docker(self))
+        # self.add_cog(Docker(self))
         self.add_cog(Jellyfin(self))
 
         db = self.get_cog("Db")
