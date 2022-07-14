@@ -28,11 +28,11 @@ class Jellyfin(commands.Cog):
     @is_trusted
     async def jellyfin_command(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send("No subcommand given.")
+            await ctx.reply("No subcommand given.")
 
     @jellyfin_command.command(name="refresh", aliases=["r"])
     async def jellyfin_refresh(self, ctx):
         if self.refresh_all_libraries():
-            await ctx.send("Refreshed all libraries")
+            await ctx.reply("Refreshed all libraries")
         else:
-            await ctx.send("Failed to refresh libraries")
+            await ctx.reply("Failed to refresh libraries")

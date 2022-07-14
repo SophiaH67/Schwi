@@ -51,8 +51,8 @@ class Settings(commands.Cog):
     async def set(self, ctx, key, value):
         result = await self.set_setting(key, value)
         if result is None:
-            return await ctx.send("Setting not found.")
-        return await ctx.send(f"Set {key} to {value}")
+            return await ctx.reply("Setting not found.")
+        return await ctx.reply(f"Set {key} to {value}")
 
     @settings.command()
     async def get(self, ctx, key=None):
@@ -61,10 +61,10 @@ class Settings(commands.Cog):
             for setting in self.db.Session.query(self.db.BotSettings):
                 settings_str += f"{setting.key}: {setting.value}\n"
             settings_str += "```"
-            await ctx.send(settings_str)
+            await ctx.reply(settings_str)
         else:
             value = await self.get_setting(key)
             if value is None:
-                await ctx.send(f"{key} is not set.")
+                await ctx.reply(f"{key} is not set.")
             else:
-                await ctx.send(f"{key} is {value}")
+                await ctx.reply(f"{key} is {value}")

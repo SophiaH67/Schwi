@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from lib.minimum_permission_level import is_admin
 import os
 
+
 class Db(commands.Cog):
     def __init__(self, schwi):
         self.schwi = schwi
@@ -24,4 +25,4 @@ class Db(commands.Cog):
     @is_admin
     async def migrate(self, ctx):
         self.Base.metadata.create_all(self.engine)
-        await ctx.send("Migration complete.")
+        await ctx.reply("Migration complete.")

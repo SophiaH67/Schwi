@@ -40,10 +40,10 @@ class Schwi(commands.Bot):
     async def on_ready(self):
         self.logger.info("Logged on as {0}!".format(self.user))
 
-    async def on_command_error(self, context, exception):
+    async def on_command_error(self, ctx, exception):
         if isinstance(exception, UserNotAuthorizedException):
-            return await context.send("You are not authorized to use this command.")
-        return await super().on_command_error(context, exception)
+            return await ctx.reply("You are not authorized to use this command.")
+        return await super().on_command_error(ctx, exception)
 
 
 client = Schwi()

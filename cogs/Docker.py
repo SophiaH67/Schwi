@@ -18,35 +18,35 @@ class Docker(commands.Cog):
     @is_trusted
     async def docker_command(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send("No subcommand given.")
+            await ctx.reply("No subcommand given.")
 
     @docker_command.command(name="list", aliases=["l"])
     async def docker_list(self, ctx):
         containers = self.client.containers.list(all=True)
         if len(containers) == 0:
-            return await ctx.send("No containers found.")
+            return await ctx.reply("No containers found.")
         msg = "Containers:\n```"
         for container in containers:
             msg += f"{container.name} - {container.status}\n"
         msg += "```"
-        return await ctx.send(msg)
+        return await ctx.reply(msg)
 
     @docker_command.command(name="start", aliases=["s"])
     async def docker_start(self, ctx, name):
         container = self.client.containers.get(name)
         if container is None:
-            return await ctx.send("Container not found.")
+            return await ctx.reply("Container not found.")
         if container.status == "running":
-            return await ctx.send("Container is already running.")
+            return await ctx.reply("Container is already running.")
         container.start()
-        return await ctx.send(f"Started container {name}.")
+        return await ctx.reply(f"Started container {name}.")
 
     @docker_command.command(name="stop", aliases=["st"])
     async def docker_stop(self, ctx, name):
         container = self.client.containers.get(name)
         if container is None:
-            return await ctx.send("Container not found.")
+            return await ctx.reply("Container not found.")
         if container.status != "running":
-            return await ctx.send("Container is not running.")
+            return await ctx.reply("Container is not running.")
         container.stop()
-        return await ctx.send(f"Stopped container {name}.")
+        return await ctx.reply(f"Stopped container {name}.")

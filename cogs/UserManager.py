@@ -54,6 +54,6 @@ class UserManager(commands.Cog):
         user = self.get_or_create_user(discord_user)
         user.permission_level = permission_level
         self.db.Session.commit()
-        await ctx.send(
+        await ctx.reply(
             f"Set {discord_user.display_name}'s permission level to {permission_level}"
         )
