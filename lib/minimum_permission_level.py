@@ -13,16 +13,12 @@ class PermissionLevel:
     ADMIN = 2
 
 
-class UserNotAuthorizedException(Exception):
-    pass
-
-
 def predicate_factory(permission_level: int):
     def predicate(ctx):
         user_manager: UserManager = ctx.bot.get_cog("UserManager")
         user = user_manager.get_or_create_user(ctx.author)
         if user.permission_level < permission_level:
-            raise UserNotAuthorizedException()
+            return False
         return True
 
     return predicate

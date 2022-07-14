@@ -9,7 +9,6 @@ from cogs.Db import Db
 from cogs.UserManager import UserManager
 from cogs.Context import Context
 from cogs.NaturalLanguage import NaturalLanguage
-from lib.minimum_permission_level import UserNotAuthorizedException
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -41,8 +40,6 @@ class Schwi(commands.Bot):
         self.logger.info("Logged on as {0}!".format(self.user))
 
     async def on_command_error(self, ctx, exception):
-        if isinstance(exception, UserNotAuthorizedException):
-            return await ctx.reply("You are not authorized to use this command.")
         return await super().on_command_error(ctx, exception)
 
 
