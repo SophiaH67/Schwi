@@ -1,0 +1,8 @@
+discord.py
+SQLAlchemy
+python-dotenv
+docker
+psycopg2
+transformers
+nltk
+openai
