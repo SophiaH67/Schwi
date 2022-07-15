@@ -3,7 +3,6 @@ from discord.ext import commands
 import nltk
 import openai
 import numpy
-from lib.minimum_permission_level import PermissionLevel
 from lib.prompt import Prompt
 
 nltk.download("punkt")
@@ -69,6 +68,7 @@ class NaturalLanguage(commands.Cog):
                 return
         # NLP stuff
         tokens = nltk.word_tokenize(message.content)
+        self.logger.debug(f"Tokens: {tokens}")
         tagged = nltk.pos_tag(tokens)
 
         for token in tagged:
@@ -121,4 +121,4 @@ class NaturalLanguage(commands.Cog):
             .text
         )
         response = response.replace("\n", " ").strip()
-        await message.channel.send(response)
+        await message.reply(response)
