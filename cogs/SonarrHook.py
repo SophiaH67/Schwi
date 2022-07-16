@@ -8,22 +8,27 @@ class SonarrHook(commands.Cog):
     tell jellyfin to scan all libraries
     """
 
+    succes_colors = ["#3e6800", "#27c24c", "#000000"]
+
     def __init__(self, schwi):
         self.schwi = schwi
         self.logger = logging.getLogger(self.__class__.__name__)
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
-        if not message.author.name == "Marine":
-            return
         if len(message.embeds) != 1:
+            self.logger.debug(f"Embeds not 1: {len(message.embeds)}")
             return
-        if not message.embeds[0].color == "#27c24c":
+        if not str(message.embeds[0].color) in self.succes_colors:
+            self.logger.debug(f"Not a success message: {message.embeds[0].color}")
             return
         if not message.channel.name == "log":
+            self.logger.debug(f"Not in #log: {message.channel.name}")
+            return
+        if not message.author.name == "Marine":
+            self.logger.debug(f"Not Marine: {message.author.name}")
             return
 
-
-        await self.schwi.get_cog("Jellyfin").scan_all_libraries()
+        await self.schwi.get_cog("Jellyfin").refresh_all_libraries()
         # React with rocket emoji
         await message.add_reaction("🚀")
