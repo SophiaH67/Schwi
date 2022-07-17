@@ -13,14 +13,33 @@ nltk.download("stopwords")
 
 
 class NaturalLanguage(commands.Cog):
+    answer_on = [
+        "compute",
+        "what",
+        "who",
+        "why",
+        "when",
+        "where",
+        "how",
+        "can",
+        "should",
+        "write",
+        "which",
+        "do i",
+        "explain",
+        "does",
+        "is that",
+        "is it",
+        "is this",
+        "schwi",
+    ]
+
     def __init__(self, schwi):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.schwi = schwi
         self.db = schwi.get_cog("Db")
         self.context = schwi.get_cog("Context")
         self.settings = schwi.get_cog("Settings")
-
-        self.answer_on = ["WRB", "$WP", "WP", "WDT", "MD"]
 
     @property
     async def engine(self):
@@ -66,21 +85,9 @@ class NaturalLanguage(commands.Cog):
             if mention == self.schwi.user:
                 await self.answer_message(message)
                 return
-        # NLP stuff
-        tokens = nltk.word_tokenize(message.content)
-        self.logger.debug(f"Tokens: {tokens}")
-        tagged = nltk.pos_tag(tokens)
-
-        for token in tagged:
-            if token[1] in self.answer_on:
-                await self.answer_message(message)
-                return
-
-        # Check if the reference is to the bot
-        ref = message.reference
-        if ref is not None:
-            msg = await message.channel.fetch_message(ref.message_id)
-            if msg.author == self.schwi.user:
+        # Static trigger words
+        for answer_on in self.answer_on:
+            if message.content.lower().startswith(answer_on):
                 await self.answer_message(message)
                 return
 
