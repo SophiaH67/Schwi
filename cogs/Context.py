@@ -54,11 +54,7 @@ class Context(commands.Cog):
         else:
             tokens = self.tokenizer(message.content)["input_ids"]
             while len(tokens) > int(await self.max_tokens_per_message):
-                tokens.pop()
-            self.logger.debug(f"Tokens: {tokens}")
-            # Convert tokens back to string
-            message.content = " ".join(
-                [self.tokenizer.decode(t).strip() for t in tokens]
-            )
+                message.content = message.content[:-1]
+                tokens = self.tokenizer(message.content)["input_ids"]
             self.logger.debug(f"Message: {message.content}")
             context_list.append(message)
