@@ -32,7 +32,7 @@ class Context(commands.Cog):
 
     def get_context(self, channel_id) -> List[Message]:
         if channel_id not in self.context:
-            self.context[channel_id] = ListWithMaxLength(10)
+            self.context[channel_id] = ListWithMaxLength(5)
         return self.context[channel_id]
 
     @commands.Cog.listener()
@@ -40,21 +40,9 @@ class Context(commands.Cog):
         if message.content == "##compute##":
             return
         if not message.channel.id in self.context:
-            self.context[message.channel.id] = ListWithMaxLength(10)
+            self.context[message.channel.id] = ListWithMaxLength(5)
+        self.logger.debug(
+            f"List for channel {message.channel.id}: {self.context[message.channel.id]}"
+        )
         context_list = self.context[message.channel.id]
-        if len(context_list) > 0:
-            last_message = context_list[-1]
-            if last_message.author == message.author:
-                # Check if max tokens per message is exceeded
-                new_message = last_message.content + f"\n{message.content}"
-                tokens = self.tokenizer(new_message)["input_ids"]
-                if not len(tokens) > int(await self.max_tokens_per_message):
-                    last_message.content = new_message
-                    return
-        else:
-            tokens = self.tokenizer(message.content)["input_ids"]
-            while len(tokens) > int(await self.max_tokens_per_message):
-                message.content = message.content[:-1]
-                tokens = self.tokenizer(message.content)["input_ids"]
-            self.logger.debug(f"Message: {message.content}")
-            context_list.append(message)
+        context_list.append(message)

@@ -4,6 +4,7 @@ import nltk
 import openai
 import numpy
 from lib.prompt import Prompt
+import json
 
 nltk.download("punkt")
 nltk.download("averaged_perceptron_tagger")
@@ -32,6 +33,7 @@ class NaturalLanguage(commands.Cog):
         "is it",
         "is this",
         "schwi",
+        "##compute##",
     ]
 
     def __init__(self, schwi):
@@ -98,14 +100,9 @@ class NaturalLanguage(commands.Cog):
         await prompt.add_chat_context(message, context)
 
         # So that GPT doesn't generate stuff for other people
-        recent_unique_authors = list(map(lambda message: message.author.name, context))
+        recent_authors = list(map(lambda message: message.author.name, context))
+        recent_unique_authors = list(set(recent_authors))
 
-        [recent_unique_authors, indexes] = numpy.unique(
-            recent_unique_authors, return_index=True
-        )
-        recent_unique_authors = [
-            recent_unique_authors[index] for index in sorted(indexes)
-        ]
         recent_unique_authors = list(recent_unique_authors)
         stop_tokens = []
         for recent_unique_author in recent_unique_authors[::-1]:
@@ -127,5 +124,7 @@ class NaturalLanguage(commands.Cog):
             .choices[0]
             .text
         )
+        self.logger.debug(f"Prompt: {json.dumps(str(prompt))}")
+        self.logger.debug(f"Response: {response}")
         response = response.replace("\n", " ").strip()
         await message.reply(response)

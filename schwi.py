@@ -6,6 +6,7 @@ from cogs.Docker import Docker
 from cogs.Jellyfin import Jellyfin
 from cogs.Qbit import Qbit
 from cogs.SonarrHook import SonarrHook
+from cogs.Mood import Mood
 
 from cogs.Db import Db
 from cogs.UserManager import UserManager
@@ -35,6 +36,7 @@ class Schwi(commands.Bot):
         # self.add_cog(Docker(self))
         self.add_cog(Qbit(self))
         self.add_cog(Jellyfin(self))
+        self.add_cog(Mood(self))
 
         db = self.get_cog("Db")
         db.Base.metadata.create_all(db.engine)
