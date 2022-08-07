@@ -1,11 +1,14 @@
 from discord.ext import commands
 import logging
 from sqlalchemy.orm.decl_api import DeclarativeMeta
+from asyncio import sleep
 
 
 class SchwiCog(commands.Cog):
     dependencies: list[str] = []
     models: list[callable] = []
+    tick: callable or None = None
+    tick_delay = 10
 
     def __init__(self, schwi):
         self.schwi = schwi
@@ -21,3 +24,12 @@ class SchwiCog(commands.Cog):
             base: DeclarativeMeta = self.db.Base
             model = model_factory(base)
             setattr(self.db, model.__name__, model)
+
+        if self.tick is not None:
+            self.schwi.loop.create_task(self.tick_loop())
+
+    async def tick_loop(self):
+        while True:
+            if self.schwi.user:  # In case the bot is not logged in
+                await self.tick()
+            await sleep(self.tick_delay)

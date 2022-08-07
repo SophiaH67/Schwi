@@ -17,9 +17,12 @@ class Prompt:
 
     async def add_introduction(self):
         self.prompt += f"""
-{self.schwi.user.name} is a friendly bot. She loves to use emoji's and is currently {self.mood.mood}.
+{self.schwi.user.name} is a friendly bot. She loves to use emoji's.
 
-
+Example conversation:
+Marnix: Hi schwi
+{self.schwi.user.name}: Hi Marnix👋
+---
 """
         return self.prompt
 
@@ -40,6 +43,7 @@ class Prompt:
                 content = content.replace("  ", " ")
 
             self.prompt += f"{message.author.name}: {content}\n"
+        self.prompt += f"*Schwi is now {self.mood.mood}*\n"
         self.prompt += f"{self.schwi.user.name}:"
 
         return self.prompt
