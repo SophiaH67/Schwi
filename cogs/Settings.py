@@ -3,6 +3,13 @@ from sqlalchemy import Column, String
 from lib.minimum_permission_level import is_admin
 from schwi.SchwiCog import SchwiCog
 
+def bot_settings_factory(base):
+    class BotSettings(base):
+        __tablename__ = "bot_settings"
+        key = Column(String, primary_key=True)
+        value = Column(String)
+    return BotSettings
+
 
 class Settings(SchwiCog):
     dependencies = ["Db"]

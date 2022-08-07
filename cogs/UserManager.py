@@ -1,11 +1,9 @@
 from __future__ import annotations
-import logging
 from discord.ext import commands
 import discord
 from typing import TYPE_CHECKING
 from sqlalchemy import BigInteger, Column, Integer, String
 
-from sqlalchemy.orm.decl_api import DeclarativeMeta
 
 from lib.minimum_permission_level import is_admin
 from schwi.SchwiCog import SchwiCog
@@ -16,26 +14,27 @@ if TYPE_CHECKING:
     from cogs.Db import Db
 
 
+def user_factory(base):
+    class User(base):
+        __tablename__ = "users"
+        id = Column(BigInteger, primary_key=True)
+        permission_level = Column(Integer)
+        name = Column(String)
+
+        def __init__(self, id: int, name: str, permission_level: int = 0):
+            self.id = id
+            self.name = name
+            self.permission_level = permission_level
+
+    return User
+
+
 class UserManager(SchwiCog):
     dependencies = ["Db"]
+    models = [user_factory]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        base: DeclarativeMeta = self.db.Base
-        # Register the User class with the Db class.
-        class User(base):
-            __tablename__ = "users"
-            id = Column(BigInteger, primary_key=True)
-            permission_level = Column(Integer)
-            name = Column(String)
-
-            def __init__(self, id: int, name: str, permission_level: int = 0):
-                self.id = id
-                self.name = name
-                self.permission_level = permission_level
-
-        self.db.User = User
 
     def get_or_create_user(self, member: discord.Member):
         user = self.db.Session.query(self.db.User).filter_by(id=member.id).first()
