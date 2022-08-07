@@ -1,12 +1,14 @@
 from discord.ext import commands
 from sqlalchemy import Column, String
 from lib.minimum_permission_level import is_admin
+from schwi.SchwiCog import SchwiCog
 
 
-class Settings(commands.Cog):
-    def __init__(self, schwi):
-        self.schwi = schwi
-        self.db = schwi.get_cog("Db")
+class Settings(SchwiCog):
+    dependencies = ["Db"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         class BotSettings(self.db.Base):
             __tablename__ = "bot_setting"

@@ -6,14 +6,12 @@ from qbittorrent import Client
 import urllib.parse
 import os
 
+from schwi.SchwiCog import SchwiCog
 
-class Qbit(commands.Cog):
+
+class Qbit(SchwiCog):
     qb = Client(os.getenv("QBIT_URL"))
     qb.login()
-
-    def __init__(self, schwi):
-        self.schwi = schwi
-        self.logger = logging.getLogger(self.__class__.__name__)
 
     @commands.group(name="qbit", aliases=["qb"])
     async def qbit_command(self, ctx):

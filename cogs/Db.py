@@ -1,4 +1,3 @@
-import logging
 from discord.ext import commands
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, String, create_engine
@@ -6,11 +5,12 @@ from sqlalchemy.orm import sessionmaker
 from lib.minimum_permission_level import is_admin
 import os
 
+from schwi.SchwiCog import SchwiCog
 
-class Db(commands.Cog):
-    def __init__(self, schwi):
-        self.schwi = schwi
-        self.logger = logging.getLogger(self.__class__.__name__)
+
+class Db(SchwiCog):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.engine = create_engine(os.environ["DATABASE_URL"])
         self.Base = declarative_base()
         self.SessionMaker = sessionmaker(bind=self.engine)

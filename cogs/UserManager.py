@@ -8,18 +8,20 @@ from sqlalchemy import BigInteger, Column, Integer, String
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 
 from lib.minimum_permission_level import is_admin
+from schwi.SchwiCog import SchwiCog
 
 
 if TYPE_CHECKING:
-    from ..schwi import Schwi
+    from ..main import Schwi
     from cogs.Db import Db
 
 
-class UserManager(commands.Cog):
-    def __init__(self, schwi: Schwi):
-        self.logger = logging.getLogger(self.__class__.__name__)
-        self.schwi = schwi
-        self.db: Db = schwi.get_cog("Db")
+class UserManager(SchwiCog):
+    dependencies = ["Db"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         base: DeclarativeMeta = self.db.Base
         # Register the User class with the Db class.
         class User(base):

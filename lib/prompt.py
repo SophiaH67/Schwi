@@ -35,6 +35,12 @@ class Prompt:
             for sticker in message.stickers:
                 content += f" {sticker.name}"
 
+            # Replace custom emoji with their name
+            for emoji in message.emojis:
+                content = content.replace(
+                    f"<:{emoji.name}:{emoji.id}>", f":{emoji.name}:"
+                )
+
             # Global replace of all double spaces with a single space
             while "  " in content:
                 content = content.replace("  ", " ")

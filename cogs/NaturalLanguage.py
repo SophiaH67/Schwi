@@ -1,10 +1,11 @@
-import logging
 from discord.ext import commands
 import nltk
 import openai
-import numpy
 from lib.prompt import Prompt
 import json
+
+from schwi.SchwiCog import SchwiCog
+
 
 nltk.download("punkt")
 nltk.download("averaged_perceptron_tagger")
@@ -13,7 +14,7 @@ nltk.download("wordnet")
 nltk.download("stopwords")
 
 
-class NaturalLanguage(commands.Cog):
+class NaturalLanguage(SchwiCog):
     answer_on = [
         "compute",
         "what",
@@ -36,12 +37,7 @@ class NaturalLanguage(commands.Cog):
         "##compute##",
     ]
 
-    def __init__(self, schwi):
-        self.logger = logging.getLogger(self.__class__.__name__)
-        self.schwi = schwi
-        self.db = schwi.get_cog("Db")
-        self.context = schwi.get_cog("Context")
-        self.settings = schwi.get_cog("Settings")
+    dependencies = ["Db", "Context", "Settings"]
 
     @property
     async def engine(self):

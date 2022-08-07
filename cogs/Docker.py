@@ -1,17 +1,13 @@
 from discord.ext import commands
-import logging
 from lib.minimum_permission_level import is_trusted
 import docker
 
+from schwi.SchwiCog import SchwiCog
 
-class Docker(commands.Cog):
-    def __init__(self, schwi):
-        self.logger = logging.getLogger(self.__class__.__name__)
-        self.schwi = schwi
-        self.db = schwi.get_cog("Db")
-        self.context = schwi.get_cog("Context")
-        self.settings = schwi.get_cog("Settings")
 
+class Docker(SchwiCog):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.client = docker.from_env()
 
     @commands.group(name="docker", aliases=["d"])

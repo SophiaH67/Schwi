@@ -1,8 +1,9 @@
 from typing import List
 from discord.ext import commands
-import logging
 from discord import Message
 from transformers import GPT2TokenizerFast
+
+from schwi.SchwiCog import SchwiCog
 
 
 class ListWithMaxLength(list):
@@ -16,13 +17,13 @@ class ListWithMaxLength(list):
         super().append(item)
 
 
-class Context(commands.Cog):
-    def __init__(self, schwi):
-        self.logger = logging.getLogger(self.__class__.__name__)
-        self.schwi = schwi
+class Context(SchwiCog):
+    dependencies = ["Settings"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.context = {}
         self.tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
-        self.settings = schwi.get_cog("Settings")
 
     @property
     async def max_tokens_per_message(self):

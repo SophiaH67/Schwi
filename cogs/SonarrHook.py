@@ -2,17 +2,15 @@ import logging
 from discord.ext import commands
 from discord import Message
 
+from schwi.SchwiCog import SchwiCog
 
-class SonarrHook(commands.Cog):
+
+class SonarrHook(SchwiCog):
     """Whenever a message is posted in #log by Marine,
     tell jellyfin to scan all libraries
     """
 
     succes_colors = ["#3e6800", "#27c24c", "#000000"]
-
-    def __init__(self, schwi):
-        self.schwi = schwi
-        self.logger = logging.getLogger(self.__class__.__name__)
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
