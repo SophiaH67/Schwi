@@ -26,14 +26,16 @@ class Mood(SchwiCog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id == self.schwi.user.id:
-            self.exhaustion += 0.1 * random()
+            self.exhaustion += 0.01 * random()
 
     async def tick(self):
         # Add randomness to the mood
         self.frustration += 0.1 * (0.5 - random())
-        exhaustion_change = 0.0025 * (0.5 + (random() / 2))
+        exhaustion_change = 0.001 * (0.5 + (random() / 2))
         if self.asleep:
-            self.exhaustion -= exhaustion_change * 2
+            self.exhaustion -= (
+                exhaustion_change * 4
+            )  # Wakes up 4 times faster than it takes to fall asleep
         else:
             self.exhaustion += exhaustion_change
         # Check if the bot is asleep
