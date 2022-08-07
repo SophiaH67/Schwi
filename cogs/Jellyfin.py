@@ -1,14 +1,13 @@
-import logging
 from discord.ext import commands
 import os
 import requests
 from lib.minimum_permission_level import is_trusted
+from schwi.SchwiCog import SchwiCog
 
 
-class Jellyfin(commands.Cog):
-    def __init__(self, schwi):
-        self.schwi = schwi
-        self.logger = logging.getLogger(self.__class__.__name__)
+class Jellyfin(SchwiCog):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.jellyfin_url = "https://jellyfin.marnixah.com"
         self.jellyfin_api_key = os.environ.get("JELLYFIN_API_KEY")
 
