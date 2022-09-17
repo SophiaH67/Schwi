@@ -8,6 +8,28 @@ import os
 
 from schwi.SchwiCog import SchwiCog
 
+# Copied from https://stackoverflow.com/questions/1094841/get-human-readable-version-of-file-size
+# because for some reason python people don't make libraries for this
+def sizeof_fmt(num, suffix="B"):
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f}{unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f}Yi{suffix}"
+
+
+# Function to format a number of seconds into a human readable string
+# e.g. 62 -> 1m2s
+def format_seconds(seconds):
+    if seconds < 60:
+        return f"{seconds}s"
+    elif seconds < 3600:
+        return f"{seconds // 60}m{seconds % 60}s"
+    elif seconds < 86400:
+        return f"{seconds // 3600}h{(seconds // 60) % 60}m"
+    else:
+        return f"{seconds // 86400}d{(seconds // 3600) % 24}h"
+
 
 class Qbit(SchwiCog):
     qb = Client(os.getenv("QBIT_URL"))
@@ -29,11 +51,19 @@ class Qbit(SchwiCog):
         torrents.sort(key=lambda x: -x["added_on"])
         embed = Embed(title="Qbit Torrents")
         for torrent in torrents[:limit]:
-            embed.add_field(
-                name=torrent["name"],
-                inline=True,
-                value=f"{torrent['state']} - {round(torrent['progress'] * 100, 1)}%",
-            )
+            value = f"{torrent['state']}"
+            name = torrent["name"]
+            if torrent["dlspeed"] > 0 or torrent["upspeed"] > 0:
+                speeds = []
+                if torrent["dlspeed"] > 0:
+                    speeds.append(f"DL: {sizeof_fmt(torrent['dlspeed'])}/s")
+                if torrent["upspeed"] > 0:
+                    speeds.append(f"UL: {sizeof_fmt(torrent['upspeed'])}/s")
+                value += f" ({' | '.join(speeds)})"
+            # If the torrent is still downloading, show an ETA
+            if torrent["state"] == "downloading":
+                name += f" ({format_seconds(torrent['eta'])})"
+            embed.add_field(name=name, inline=True, value=value)
         await ctx.reply(embed=embed)
 
     @qbit_command.command(name="add", aliases=["a"], help="Add a torrent to qbit")
