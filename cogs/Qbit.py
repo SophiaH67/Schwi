@@ -21,12 +21,14 @@ class Qbit(SchwiCog):
     @qbit_command.command(
         name="list", aliases=["l"], help="List the latest 20 torrents and their status"
     )
-    async def qbit_list(self, ctx):
+    async def qbit_list(self, ctx, limit=18):
+        if limit > 18:
+            limit = 18
         torrents = self.qb.torrents()
         # Sort torrents by ["added_on"]
         torrents.sort(key=lambda x: -x["added_on"])
         embed = Embed(title="Qbit Torrents")
-        for torrent in torrents[:18]:
+        for torrent in torrents[:limit]:
             embed.add_field(
                 name=torrent["name"],
                 inline=True,
