@@ -1,3 +1,4 @@
 {
-  "conventionalCommits.scopes": ["commands", ".gitignore"]
+  "conventionalCommits.scopes": ["commands", ".gitignore", "qbit"],
+  "cSpell.words": ["Homeassistant", "Qbit", "Sonarr"]
 }

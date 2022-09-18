@@ -8,3 +8,4 @@ nltk
 openai
 python-qbittorrent
 arrow
+homeassistant-api

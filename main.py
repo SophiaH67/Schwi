@@ -2,11 +2,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from cogs.Docker import Docker
 from cogs.Jellyfin import Jellyfin
 from cogs.Qbit import Qbit
 from cogs.SonarrHook import SonarrHook
 from cogs.Mood import Mood
+from cogs.Homeassistant import Homeassistant
 
 from cogs.Db import Db
 from cogs.UserManager import UserManager
@@ -37,6 +37,7 @@ class Schwi(commands.Bot):
         self.add_cog(Qbit(self))
         self.add_cog(Jellyfin(self))
         self.add_cog(Mood(self))
+        self.add_cog(Homeassistant(self))
 
         db = self.get_cog("Db")
         db.Base.metadata.create_all(db.engine)
@@ -45,7 +46,8 @@ class Schwi(commands.Bot):
         self.logger.info("Logged on as {0}!".format(self.user))
 
     async def on_command_error(self, ctx, exception):
-        return await super().on_command_error(ctx, exception)
+        raise exception
+        await super().on_command_error(ctx, exception)
 
 
 client = Schwi()
