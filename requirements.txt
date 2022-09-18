@@ -8,4 +8,3 @@ nltk
 openai
 python-qbittorrent
 arrow
-homeassistant_api==4.0.0.post2
