@@ -1,8 +1,8 @@
-import logging
 from discord.ext import commands
 from discord import Embed
 from lib.dataclasses.torrent import Torrent
 from lib.events.QbitEvent import QbitEvent
+from lib.format_seconds import format_seconds
 from lib.minimum_permission_level import is_trusted
 from qbittorrent import Client
 import urllib.parse
@@ -18,19 +18,6 @@ def sizeof_fmt(num, suffix="B"):
             return f"{num:3.1f}{unit}{suffix}"
         num /= 1024.0
     return f"{num:.1f}Yi{suffix}"
-
-
-# Function to format a number of seconds into a human readable string
-# e.g. 62 -> 1m2s
-def format_seconds(seconds):
-    if seconds < 60:
-        return f"{seconds}s"
-    elif seconds < 3600:
-        return f"{seconds // 60}m{seconds % 60}s"
-    elif seconds < 86400:
-        return f"{seconds // 3600}h{(seconds // 60) % 60}m"
-    else:
-        return f"{seconds // 86400}d{(seconds // 3600) % 24}h"
 
 
 class Qbit(SchwiCog):
@@ -98,10 +85,18 @@ class Qbit(SchwiCog):
             "qbit_channel", "968977044673273917"
         )
 
+    @property
+    async def notifications_enable(self):
+        return (
+            await self.settings.get_or_create_setting("notifications_enable", "True")
+        ).lower() == "true"
+
     async def on_qbit_event(self, event: QbitEvent):
+        if not await self.notifications_enable:
+            return
         self.logger.info(f"Got qbit event: {event.torrent.name}")
         channel = self.schwi.get_channel(int(await self.qbit_channel))
         if channel is None:
             raise Exception("Qbit channel not found")
-        embed = Embed(title=event.torrent.name, color=0x2f67ba)
+        embed = Embed(title=event.torrent.name, color=0x2F67BA)
         await channel.send("Torrent added!", embed=embed)

@@ -37,7 +37,10 @@ class Redis(SchwiCog, RedisClient, metaclass=RedisMeta):
     async def list_keys(self, ctx):
         str_keys = []
         for key in self.keys():
-            str_keys.append(key.decode("utf-8"))
+            key = key.decode("utf-8")
+            if key.startswith("event:"):
+                continue
+            str_keys.append(key)
         if len(str_keys) == 0:
             await ctx.reply("Uh oh, the database appears to be empty!")
         else:

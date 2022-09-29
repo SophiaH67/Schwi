@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from cogs.EventManager import EventManager
 from cogs.Redis import Redis
+from cogs.Youtube import Youtube
 
 load_dotenv()
 
@@ -35,6 +36,7 @@ class Schwi(commands.Bot):
         self.add_cog(EventManager(self))
         self.add_cog(SonarrHook(self))
         self.add_cog(UserManager(self))
+        self.add_cog(Youtube(self))
         self.add_cog(Context(self))
         self.add_cog(NaturalLanguage(self))
         # self.add_cog(Docker(self))
