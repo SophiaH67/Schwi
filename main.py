@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from cogs.EventManager import EventManager
 
 load_dotenv()
 
@@ -29,6 +30,7 @@ class Schwi(commands.Bot):
         # Load cogs
         self.add_cog(Db(self))
         self.add_cog(Settings(self))
+        self.add_cog(EventManager(self))
         self.add_cog(SonarrHook(self))
         self.add_cog(UserManager(self))
         self.add_cog(Context(self))
