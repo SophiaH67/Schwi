@@ -6,10 +6,14 @@ class SchwiEvent:
     def __init__(self, schwi):
         self.schwi = schwi
         self.id = str(uuid4())
+        self.redis = self.schwi.get_cog("Redis")
+
+        if self.is_unique():
+            self.redis.set(self.redis_key, self.id)
 
     @abc.abstractproperty
-    def event_name(self):
-        pass
+    def event_name(self) -> str:
+        return "NOT_IMPLEMENTED"
 
     @property
     def uid(self):
@@ -24,5 +28,5 @@ class SchwiEvent:
         return f"event:{self.event_name}:{self.uid}"
 
     def is_unique(self):
-        redis = self.schwi.get_cog("Redis")
-        return redis.get(self.redis_key) == self.id.encode()
+        event_owner = self.redis.get(self.redis_key)
+        return event_owner == self.id.encode() or event_owner is None

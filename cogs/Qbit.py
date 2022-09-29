@@ -1,6 +1,8 @@
 import logging
 from discord.ext import commands
 from discord import Embed
+from lib.dataclasses.torrent import Torrent
+from lib.events.QbitEvent import QbitEvent
 from lib.minimum_permission_level import is_trusted
 from qbittorrent import Client
 import urllib.parse
@@ -34,6 +36,11 @@ def format_seconds(seconds):
 class Qbit(SchwiCog):
     qb = Client(os.getenv("QBIT_URL"))
     qb.login()
+    dependencies = ["EventManager", "Settings"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.eventmanager.on(QbitEvent, self.on_qbit_event)
 
     @commands.group(name="qbit", aliases=["qb"])
     async def qbit_command(self, ctx):
@@ -77,3 +84,24 @@ class Qbit(SchwiCog):
             await ctx.reply("Failed to add torrent.")
         else:
             await ctx.reply("Torrent added.")
+
+    tick_delay = 60
+
+    async def tick(self):
+        for torrent in self.qb.torrents():
+            event = QbitEvent(self.schwi, Torrent.from_dict(torrent))
+            self.eventmanager.emit(event)
+
+    @property
+    async def qbit_channel(self):
+        return await self.settings.get_or_create_setting(
+            "qbit_channel", "968977044673273917"
+        )
+
+    async def on_qbit_event(self, event: QbitEvent):
+        self.logger.info(f"Got qbit event: {event.torrent.name}")
+        channel = self.schwi.get_channel(int(await self.qbit_channel))
+        if channel is None:
+            raise Exception("Qbit channel not found")
+        embed = Embed(title=event.torrent.name, color=0x2f67ba)
+        await channel.send("Torrent added!", embed=embed)

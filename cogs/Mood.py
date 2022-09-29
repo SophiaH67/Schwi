@@ -9,6 +9,7 @@ from discord import Status, Game
 
 class Mood(SchwiCog):
     asleep = False
+    previous_status = None
 
     # frustration is affected by both command errors and completions
     frustration = FadingFloat(0.5, 60 * 60)
@@ -55,6 +56,10 @@ class Mood(SchwiCog):
             status = Status.idle
         elif self.frustration > 0.7:
             status = Status.dnd
+
+        if self.previous_status == status:
+            return
+        self.previous_status = status
         game = Game(name=f"{self.mood}")
         await self.schwi.change_presence(status=status, activity=game)
 
