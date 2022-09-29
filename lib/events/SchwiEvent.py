@@ -11,9 +11,9 @@ class SchwiEvent:
         if self.is_unique():
             self.redis.set(self.redis_key, self.id)
 
-    @abc.abstractproperty
+    @property
     def event_name(self) -> str:
-        return "NOT_IMPLEMENTED"
+        return self.__class__.__name__
 
     @property
     def uid(self):

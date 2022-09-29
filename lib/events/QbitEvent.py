@@ -3,8 +3,6 @@ from .SchwiEvent import SchwiEvent
 
 
 class QbitEvent(SchwiEvent):
-    event_name = "qbit"  # type: ignore
-
     def __init__(self, schwi, torrent: Torrent):
         self.torrent = torrent
 
