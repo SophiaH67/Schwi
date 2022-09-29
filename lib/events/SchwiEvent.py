@@ -1,11 +1,28 @@
 import abc
+from uuid import uuid4
 
 
 class SchwiEvent:
-    # @abc.abstractproperty
-    # def event_name(self):
-    #     pass
-    event_name = "test"
+    def __init__(self, schwi):
+        self.schwi = schwi
+        self.id = str(uuid4())
+
+    @abc.abstractproperty
+    def event_name(self):
+        pass
+
+    @property
+    def uid(self):
+        """
+        ID used for keeping track of uniqueness of events. If
+        uniqueness is not important, this can just return self.id.
+        """
+        return self.id
+
+    @property
+    def redis_key(self):
+        return f"event:{self.event_name}:{self.uid}"
 
     def is_unique(self):
-        return True
+        redis = self.schwi.get_cog("Redis")
+        return redis.get(self.redis_key) == self.id.encode()
