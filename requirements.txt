@@ -8,3 +8,5 @@ nltk
 openai
 python-qbittorrent
 arrow
+promise
+redis
