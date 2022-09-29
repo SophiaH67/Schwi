@@ -23,7 +23,7 @@ class Redis(SchwiCog, RedisClient, metaclass=RedisMeta):
 
     @redis.command(name="get", aliases=["g"], help="get a redis key")
     async def get_key(self, ctx, key):
-        await ctx.reply(self.get(key))
+        await ctx.reply(self.get(key) or "None")
 
     @redis.command(name="set", aliases=["s"], help="set a redis key")
     async def set_key(self, ctx, key, value):
