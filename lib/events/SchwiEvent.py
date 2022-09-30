@@ -12,10 +12,6 @@ class SchwiEvent:
             self.redis.set(self.redis_key, self.id)
 
     @property
-    def event_name(self) -> str:
-        return self.__class__.__name__
-
-    @property
     def uid(self):
         """
         ID used for keeping track of uniqueness of events. If
@@ -25,7 +21,7 @@ class SchwiEvent:
 
     @property
     def redis_key(self):
-        return f"event:{self.event_name}:{self.uid}"
+        return f"event:{self.__class__.__name__}:{self.uid}"
 
     def is_unique(self):
         event_owner = self.redis.get(self.redis_key)
