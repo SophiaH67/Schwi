@@ -18,6 +18,9 @@ from cogs.NaturalLanguage import NaturalLanguage
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("pytube").setLevel(logging.INFO)
+logging.getLogger("urllib3").setLevel(logging.INFO)
+logging.getLogger("discord").setLevel(logging.INFO)
 from cogs.Settings import Settings
 
 import os
