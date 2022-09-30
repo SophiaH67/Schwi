@@ -78,7 +78,6 @@ class Youtube(SchwiCog):
 
     async def on_youtube_video_event(self, event: YoutubeVideoEvent):
         if not await self.notifications_enable:
-            print("Notifications disabled, skipping")
             return
         discord_channel = self.schwi.get_channel(int(await self.yt_channel))
         if not discord_channel:
