@@ -25,12 +25,6 @@ class Context(SchwiCog):
         self.context = {}
         self.tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
-    @property
-    async def max_tokens_per_message(self):
-        return await self.settings.get_or_create_setting(
-            "context_max_tokens_per_message", "64"
-        )
-
     def get_context(self, channel_id) -> List[Message]:
         if channel_id not in self.context:
             self.context[channel_id] = ListWithMaxLength(5)

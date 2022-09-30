@@ -1,4 +1,3 @@
-import json
 import innertube
 from discord.ext import commands
 from discord import Embed
