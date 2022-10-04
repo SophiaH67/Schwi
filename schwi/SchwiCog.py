@@ -15,7 +15,7 @@ class SchwiCog(commands.Cog):
     tick: callable or None = None
     tick_delay = 10
 
-    def __init__(self, schwi: Schwi):
+    def __init__(self, schwi: "Schwi"):
         self.schwi = schwi
         self.logger = logging.getLogger(self.__class__.__name__)
 
