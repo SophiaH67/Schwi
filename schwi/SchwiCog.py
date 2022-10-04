@@ -4,13 +4,19 @@ from sqlalchemy.orm.decl_api import DeclarativeMeta
 from asyncio import sleep
 
 
+if TYPE_CHECKING:
+    from ..main import Schwi
+    from cogs.Db import Db
+
+
 class SchwiCog(commands.Cog):
     dependencies: list[str] = []
     models: list[callable] = []
     tick: callable or None = None
     tick_delay = 10
 
-    def __init__(self, schwi):
+
+    def __init__(self, schwi: Schwi):
         self.schwi = schwi
         self.logger = logging.getLogger(self.__class__.__name__)
 
@@ -31,5 +37,8 @@ class SchwiCog(commands.Cog):
     async def tick_loop(self):
         while True:
             if self.schwi.user:  # In case the bot is not logged in
-                await self.tick()
+                try:
+                  await self.tick()
+                except Exception as e:
+                    self.logger.error(f"Error in tick: {e}")
             await sleep(self.tick_delay)
