@@ -33,7 +33,9 @@ class Redis(SchwiCog, RedisClient, metaclass=RedisMeta):
     async def delete_key(self, ctx, key):
         await ctx.reply(self.delete(key))
 
-    @redis.command(name="list", aliases=["ls"], help="list all redis keys")
+    @redis.command(
+        name="list", aliases=["ls", "keys", "ks"], help="list all redis keys"
+    )
     async def list_keys(self, ctx):
         str_keys = []
         for key in self.keys():
