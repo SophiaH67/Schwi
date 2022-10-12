@@ -4,7 +4,8 @@
     ".gitignore",
     "qbit",
     "homeassistant",
-    "python_moments"
+    "python_moments",
+    "UserManager"
   ],
   "cSpell.words": ["Homeassistant", "Qbit", "Sonarr"]
 }

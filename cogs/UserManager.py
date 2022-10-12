@@ -1,17 +1,11 @@
 from __future__ import annotations
 from discord.ext import commands
 import discord
-from typing import TYPE_CHECKING
 from sqlalchemy import BigInteger, Column, Integer, String
 
 
 from lib.minimum_permission_level import is_admin
 from schwi.SchwiCog import SchwiCog
-
-
-if TYPE_CHECKING:
-    from ..main import Schwi
-    from cogs.Db import Db
 
 
 def user_factory(base):
