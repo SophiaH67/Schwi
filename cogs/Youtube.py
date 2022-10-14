@@ -72,7 +72,11 @@ class Youtube(SchwiCog):
 
     async def tick(self):
         for channel_id in await self.yt_channels:
-            channel = Channel(f"https://www.youtube.com/c/{channel_id}/videos")
+            try:
+                channel = Channel(f"https://www.youtube.com/c/{channel_id}/videos")
+            except:
+                self.logger.error(f"Failed to get channel {channel_id}")
+                continue
             for video in channel.videos:
                 self.eventmanager.emit(YoutubeVideoEvent(self.schwi, video))
 
