@@ -39,5 +39,5 @@ class SchwiCog(commands.Cog):
                 try:
                     await self.tick()
                 except Exception as e:
-                    self.logger.error(f"Error in tick: {e}")
+                    self.logger.error(e, exc_info=True)
             await sleep(self.tick_delay)
