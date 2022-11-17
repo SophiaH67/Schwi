@@ -30,6 +30,9 @@ class SchwiCog(commands.Cog):
             model = model_factory(base)
             setattr(self.db, model.__name__, model)
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        await sleep(5)
         if self.tick is not None:
             self.schwi.loop.create_task(self.tick_loop())
 

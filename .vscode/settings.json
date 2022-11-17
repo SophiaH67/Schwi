@@ -6,7 +6,8 @@
     "homeassistant",
     "python_moments",
     "UserManager",
-    "redis"
+    "redis",
+    "events"
   ],
   "cSpell.words": ["Homeassistant", "Qbit", "Sonarr"]
 }

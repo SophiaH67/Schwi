@@ -27,7 +27,6 @@ class Qbit(SchwiCog):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.eventmanager.on(QbitEvent, self.on_qbit_event)
 
     @commands.group(name="qbit", aliases=["qb"])
     async def qbit_command(self, ctx):
@@ -72,31 +71,9 @@ class Qbit(SchwiCog):
         else:
             await ctx.reply("Torrent added.")
 
-    tick_delay = 3600 / 4
+    tick_delay = 300
 
     async def tick(self):
         for torrent in self.qb.torrents():
             event = QbitEvent(self.schwi, Torrent.from_dict(torrent))
             self.eventmanager.emit(event)
-
-    @property
-    async def qbit_channel(self):
-        return await self.settings.get_or_create_setting(
-            "qbit_channel", "968977044673273917"
-        )
-
-    @property
-    async def notifications_enable(self):
-        return (
-            await self.settings.get_or_create_setting("notifications_enable", "True")
-        ).lower() == "true"
-
-    async def on_qbit_event(self, event: QbitEvent):
-        if not await self.notifications_enable:
-            return
-        self.logger.info(f"Got qbit event: {event.torrent.name}")
-        channel = self.schwi.get_channel(int(await self.qbit_channel))
-        if channel is None:
-            raise Exception("Qbit channel not found")
-        embed = Embed(title=event.torrent.name, color=0x2F67BA)
-        await channel.send("Torrent added!", embed=embed)

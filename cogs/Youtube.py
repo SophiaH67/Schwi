@@ -14,7 +14,6 @@ class Youtube(SchwiCog):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.eventmanager.on(YoutubeVideoEvent, self.on_youtube_video_event)
 
     @commands.group(name="youtube", aliases=["yt"])
     async def youtube_command(self, ctx):
@@ -49,25 +48,6 @@ class Youtube(SchwiCog):
         for embed in embeds:
             await ctx.send(embed=embed)
 
-    @property
-    async def yt_channel(self):
-        return await self.settings.get_or_create_setting(
-            "yt_channel", "879030591692079154"
-        )
-
-    @property
-    async def yt_channels(self):
-        channels = await self.settings.get_or_create_setting(
-            "yt_channels", "ZackFreedman,UnmeiIdols"
-        )
-        return channels.split(",")
-
-    @property
-    async def notifications_enable(self):
-        return (
-            await self.settings.get_or_create_setting("notifications_enable", "True")
-        ).lower() == "true"
-
     tick_delay = 3600 / 4
 
     async def tick(self):
@@ -76,25 +56,3 @@ class Youtube(SchwiCog):
             self.logger.error(f"Failed to get channel {channel_id}")
             for video in channel.videos:
                 self.eventmanager.emit(YoutubeVideoEvent(self.schwi, video))
-
-    async def on_youtube_video_event(self, event: YoutubeVideoEvent):
-        if not await self.notifications_enable:
-            return
-        discord_channel = self.schwi.get_channel(int(await self.yt_channel))
-        if not discord_channel:
-            raise Exception("Channel not found")
-
-        embed = Embed(
-            title=event.video.title,
-            description=f"{event.video.views} views - {format_seconds(event.video.length)}",
-            url=event.video.watch_url,
-            color=0xFF0000,
-        )
-        embed.add_field(
-            name="Keywords", value=", ".join(event.video.keywords) or "No keywords"
-        )
-        embed.set_image(url=event.video.thumbnail_url)
-        await discord_channel.send(
-            f"New video from {event.video.vid_info['videoDetails']['author']}!",
-            embed=embed,
-        )

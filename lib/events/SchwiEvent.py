@@ -26,3 +26,9 @@ class SchwiEvent:
     def is_unique(self):
         event_owner = self.redis.get(self.redis_key)
         return event_owner == self.id.encode() or event_owner is None
+
+    def as_embed(self):
+        return None
+
+    def as_message(self):
+        return None
