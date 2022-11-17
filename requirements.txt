@@ -12,3 +12,4 @@ promise
 redis
 innertube
 pytube
+python-dotenv

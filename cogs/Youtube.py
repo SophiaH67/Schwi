@@ -68,7 +68,7 @@ class Youtube(SchwiCog):
             await self.settings.get_or_create_setting("notifications_enable", "True")
         ).lower() == "true"
 
-    tick_delay = 60
+    tick_delay = 3600 / 4
 
     async def tick(self):
         for channel_id in await self.yt_channels:

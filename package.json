@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "dev": "nodemon --exec python main.py"
+    "dev": "nodemon --exec python main.py",
+    "setup": "python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && pip install --force homeassistant_api==4.0.0.post2",
+    "venv": "source venv/bin/activate"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

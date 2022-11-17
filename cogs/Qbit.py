@@ -72,7 +72,7 @@ class Qbit(SchwiCog):
         else:
             await ctx.reply("Torrent added.")
 
-    tick_delay = 60
+    tick_delay = 3600 / 4
 
     async def tick(self):
         for torrent in self.qb.torrents():

@@ -35,9 +35,12 @@ class SchwiCog(commands.Cog):
 
     async def tick_loop(self):
         while True:
-            if self.schwi.user:  # In case the bot is not logged in
-                try:
-                    await self.tick()
-                except Exception as e:
-                    self.logger.error(e, exc_info=True)
+            if self.schwi.user:  # In case the bot is not yet logged in
+                break
+            await sleep(1)
+        while True:
+            try:
+                await self.tick()
+            except Exception as e:
+                self.logger.error(e, exc_info=True)
             await sleep(self.tick_delay)
