@@ -60,5 +60,4 @@ class Amiami(SchwiCog):
                 event = AmiamiEvent(self.schwi, item, query)
                 self.eventmanager.emit(event)
 
-    # tick_delay = 3600
-    tick_delay = 60
+    tick_delay = 3600
