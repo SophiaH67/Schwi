@@ -4,7 +4,6 @@ from lib.amiami_item_to_embed import amiami_item_to_embed
 from lib.events.AmiamiEvent import AmiamiEvent
 from schwi.SchwiCog import SchwiCog
 from discord.ext import commands
-from discord import Embed
 
 
 class Amiami(SchwiCog):
@@ -34,6 +33,7 @@ class Amiami(SchwiCog):
             return
         search_terms.append(query)
         await self.settings.set_setting("amiami_search_terms", json.dumps(search_terms))
+        await self.tick_query(query, dry=True)
         await ctx.reply(f"Added {query} to monitored terms.")
 
     @amiami.command(name="stop_monitoring", aliases=["stop", "sm"])
@@ -55,9 +55,12 @@ class Amiami(SchwiCog):
     async def tick(self):
         search_terms = await self.search_terms
         for query in search_terms:
-            results = amiami.search(query)
-            for item in results.items:
-                event = AmiamiEvent(self.schwi, item, query)
-                self.eventmanager.emit(event)
+            await self.tick_query(query)
+
+    async def tick_query(self, query: str, dry=False):
+        results = amiami.search(query)
+        for item in results.items:
+            event = AmiamiEvent(self.schwi, item, query, dry=dry)
+            self.eventmanager.emit(event)
 
     tick_delay = 3600

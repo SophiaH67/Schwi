@@ -44,6 +44,11 @@ class EventManager(SchwiCog):
         for listener in self.listeners[event.__class__.__name__]:
             if not event.is_unique():
                 continue
+            if event.dry:
+                self.logger.debug(
+                    f"Would have called listener {listener.event_name}({listener.id}), but this is a dry run."
+                )
+                continue
             ret = listener.callback(event)
             if asyncio.iscoroutine(ret):
                 loop = asyncio.get_event_loop()

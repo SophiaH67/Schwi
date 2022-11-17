@@ -9,11 +9,11 @@ from .SchwiEvent import SchwiEvent
 class AmiamiEvent(SchwiEvent):
     item: Item
 
-    def __init__(self, schwi, item: Item, monitored_term: str):
+    def __init__(self, schwi, item: Item, monitored_term: str, **kwargs):
         self.item = item
         self.monitored_term = monitored_term
 
-        super().__init__(schwi)
+        super().__init__(schwi, **kwargs)
 
     @property
     def uid(self):

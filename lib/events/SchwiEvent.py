@@ -3,10 +3,11 @@ from uuid import uuid4
 
 
 class SchwiEvent:
-    def __init__(self, schwi):
+    def __init__(self, schwi, dry=False):
         self.schwi = schwi
         self.id = str(uuid4())
         self.redis = self.schwi.get_cog("Redis")
+        self.dry = dry
 
         if self.is_unique():
             self.redis.set(self.redis_key, self.id)
