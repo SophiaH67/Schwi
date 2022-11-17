@@ -1,4 +1,5 @@
 import json
+from lib.events.AmiamiEvent import AmiamiEvent
 from lib.events.QbitEvent import QbitEvent
 from lib.events.SchwiEvent import SchwiEvent
 from lib.events.SchwiEventListener import SchwiEventListener
@@ -9,7 +10,7 @@ from promise import Promise
 from lib.minimum_permission_level import is_trusted
 import asyncio
 
-events = [YoutubeVideoEvent, QbitEvent]
+events = [AmiamiEvent, QbitEvent, YoutubeVideoEvent]
 event_dict = {}
 for event in events:
     event_dict[event.__name__] = event

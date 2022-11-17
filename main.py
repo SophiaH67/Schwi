@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from cogs.Amiami import Amiami
 from cogs.EventManager import EventManager
 from cogs.Redis import Redis
 from cogs.Youtube import Youtube
@@ -47,6 +48,7 @@ class Schwi(commands.Bot):
         self.add_cog(Jellyfin(self))
         self.add_cog(Mood(self))
         self.add_cog(Homeassistant(self))
+        self.add_cog(Amiami(self))
 
         db = self.get_cog("Db")
         db.Base.metadata.create_all(db.engine)
