@@ -1,5 +1,5 @@
+import uuid
 from amiami.amiami import Item
-from discord import Embed
 
 from lib.amiami_item_to_embed import amiami_item_to_embed
 
@@ -17,10 +17,16 @@ class AmiamiEvent(SchwiEvent):
 
     @property
     def uid(self):
-        return self.item.productCode
+        # We already check duplication somewhere else, so we don't need to do it here
+        return self.item.productCode + str(uuid.uuid4())
+
+    def is_unique(self):
+        return True
 
     def as_embed(self):
-        return amiami_item_to_embed(self.item)
+        embed = amiami_item_to_embed(self.item)
+        embed.set_footer(text=f"Monitored term: {self.monitored_term}")
+        return embed
 
     def as_message(self):
-        return f'New item matching "{self.monitored_term}"!'
+        return f'Item matching "{self.monitored_term}" is now in stock!'
