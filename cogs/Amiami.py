@@ -1,6 +1,6 @@
 import json
-import amiami
-from amiami.amiami import Item
+import lib.async_amiami as amiami
+from lib.async_amiami import Item
 from lib.amiami_item_to_embed import amiami_item_to_embed
 from lib.events.AmiamiEvent import AmiamiEvent
 from schwi.SchwiCog import SchwiCog
@@ -32,7 +32,7 @@ class Amiami(SchwiCog):
     @amiami_cmd.command(name="search", aliases=["s"])
     async def amiami_search(self, ctx, query, limit="1"):
         limit = int(limit)
-        results = amiami.search("fumofumo plush")
+        results = await amiami.search("fumofumo plush")
         i = 0
         for item in results.items:
             i += 1
@@ -103,7 +103,7 @@ class Amiami(SchwiCog):
         self.db.Session.commit()
 
     async def tick_query(self, query: str, dry=False):
-        results = amiami.search(query)
+        results = await amiami.search(query)
         for item in results.items:
             old_item = self.db.Session.query(self.db.AmiamiItem).get(item.productCode)
 

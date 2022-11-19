@@ -1,5 +1,5 @@
 import uuid
-from amiami.amiami import Item
+from lib.async_amiami import Item
 
 from lib.amiami_item_to_embed import amiami_item_to_embed
 

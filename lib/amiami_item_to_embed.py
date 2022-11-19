@@ -1,5 +1,5 @@
 from discord import Embed
-from amiami.amiami import Item
+from lib.async_amiami import Item
 
 
 def amiami_item_to_embed(item: Item):
