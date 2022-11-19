@@ -6,6 +6,7 @@ from lib.events.AmiamiEvent import AmiamiEvent
 from schwi.SchwiCog import SchwiCog
 from discord.ext import commands
 from sqlalchemy import Boolean, Column, String
+from httpx import ReadTimeout
 
 
 def amiamiItem_factory(base):
@@ -103,7 +104,14 @@ class Amiami(SchwiCog):
         self.db.Session.commit()
 
     async def tick_query(self, query: str, dry=False):
-        results = await amiami.search(query)
+        try:
+            results = await amiami.search(query)
+        except Exception as e:
+            if isinstance(e, ReadTimeout):
+                self.logger.error(f'Gave up on "{query}" due to timeout.')
+                return
+            raise e
+
         for item in results.items:
             old_item = self.db.Session.query(self.db.AmiamiItem).get(item.productCode)
 
