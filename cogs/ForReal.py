@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+from os import environ
 from random import randint
 from discord.ext import commands
 import nltk
@@ -40,8 +41,7 @@ class ForReal(SchwiCog):
     async def on_ready(self):
         self.logger.info("ForReal cog ready.")
 
-        while True:
-
+        while await asyncio.sleep(60) or True:
             forreal = (
                 self.db.Session.query(self.db.ForReal)
                 .filter_by(day=datetime.now().date())
@@ -53,6 +53,9 @@ class ForReal(SchwiCog):
                 self.db.Session.add(forreal)
                 self.db.Session.commit()
 
+            if forreal.notification_sent:
+                return
+
             time_to_sleep = (
                 datetime.combine(datetime.now().date(), forreal.time) - datetime.now()
             ).total_seconds()
@@ -62,11 +65,11 @@ class ForReal(SchwiCog):
             forreal.notification_sent = True
             self.db.Session.commit()
 
-            # Wait for the next day
-            while forreal.day == datetime.now().date():
-                await asyncio.sleep(60)
-
     async def send_forreal(self):
+        if environ.get("NODE_ENV", "development").lower() == "development":
+            self.logger.info("Not sending forreal in development")
+            return
+        
         self.logger.info("Sending forreal")
         channel = self.schwi.get_channel(1101232564041175110)
         await channel.send("For real? @everyone")
