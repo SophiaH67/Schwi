@@ -1,11 +1,12 @@
 from dotenv import load_dotenv
+
+load_dotenv()
+
 from cogs.Amiami import Amiami
 from cogs.EventManager import EventManager
 from cogs.ForReal import ForReal
 from cogs.Redis import Redis
 from cogs.Youtube import Youtube
-
-load_dotenv()
 
 from cogs.Jellyfin import Jellyfin
 from cogs.Qbit import Qbit

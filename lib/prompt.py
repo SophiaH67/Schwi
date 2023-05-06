@@ -20,7 +20,7 @@ class Prompt:
 {self.schwi.user.name} is a friendly bot. She loves to use emoji's.
 
 Example conversation:
-Marnix: Hi schwi
+Marnix: Hi {self.schwi.user.name}
 {self.schwi.user.name}: Hi Marnix👋
 ---
 """
@@ -43,7 +43,7 @@ Marnix: Hi schwi
                 content = content.replace("  ", " ")
 
             self.prompt += f"{message.author.name}: {content}\n"
-        self.prompt += f"*Schwi is now {self.mood.mood}*\n"
+        self.prompt += f"*{self.schwi.user.name} is now {self.mood.mood}*\n"
         self.prompt += f"{self.schwi.user.name}:"
 
         return self.prompt

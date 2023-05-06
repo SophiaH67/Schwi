@@ -74,20 +74,28 @@ class NaturalLanguage(SchwiCog):
         if message.author == self.schwi.user:
             self.logger.debug("Not answering to myself.")
             return
+
         # Force answer
         if message.content == "##compute##":
             await self.answer_message(message)
             return
+
         # Mention check
         for mention in message.mentions:
             if mention == self.schwi.user:
                 await self.answer_message(message)
                 return
+
         # Static trigger words
         for answer_on in self.answer_on:
             if message.content.lower().startswith(answer_on):
                 await self.answer_message(message)
                 return
+        
+        # Check is "schwi" is in the message
+        if "schwi" in message.content.lower():
+            await self.answer_message(message)
+            return
 
     async def answer_message(self, message):
         context = self.context.get_context(message.channel.id)
